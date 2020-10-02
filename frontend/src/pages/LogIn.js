@@ -10,6 +10,7 @@ class LogIn extends Component {
         this.state = {
             username: '',
             password: '',
+            //to prevent logging in twice
             buttonDisabled: false
         }
         this.handleChange = this.handleChange.bind(this);
