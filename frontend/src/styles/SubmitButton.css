@@ -1,0 +1,12 @@
+.log-in-button {
+    font-size: 21px;
+    padding: 5px 20px;
+    border: 0;
+    background-color: #349Bdb;
+    color: #fff;
+    border-radius: 3px;
+    transition: all 250ms ease-in-out;
+};
+.log-in-button:hover {
+    background-color: #0b54db;
+    opacity: 1}
