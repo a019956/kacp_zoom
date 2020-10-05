@@ -15,6 +15,7 @@ class LogIn extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleLogIn = this.handleLogIn.bind(this);
+        this.doLogIn = this.doLogIn.bind(this);
     };
     resetForm() {
         this.setState({
@@ -26,18 +27,19 @@ class LogIn extends Component {
 		this.setState({[e.target.name]: e.target.value});
 	}
     handleLogIn(e) {
-        e.preventDefault();
         console.log(this.state.username)
         console.log(this.state.password)
         this.resetForm()
     };
 
-    async doLogin() {
+    async doLogIn() {
 
-        if (!this.state.username) {
+        if (this.state.username == '') {
+            console.log('no id')
             return;
         }
-        if (!this.state.password) {
+        if (this.state.password == '') {
+            console.log('no pw')
             return;
         }
 
@@ -80,7 +82,6 @@ class LogIn extends Component {
     render() {
         return (
             <div className="container">
-                <image/>
                 <InputField
                 label='Username:'
                 type='username'
@@ -98,7 +99,7 @@ class LogIn extends Component {
                 onChange = {this.handleChange}
                 />
                 <SubmitButton
-                onSubmit = {() => {this.handleLogIn()}}
+                onSubmit = {() => {this.doLogIn()}}
                 text = {'Log In'}
                 />
             </div>

@@ -10,7 +10,6 @@ class App extends Component {
     async componentDidMount() {
 
         try{
-
             let res = await fetch ('/isLoggedIn', {
                 method: 'post',
                 headers: {
@@ -48,6 +47,7 @@ class App extends Component {
         else {
             return (
                 <div className="log-in-page">
+                    Welcome
                     <LogIn />
                 </div>
         )};
