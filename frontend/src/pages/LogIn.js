@@ -35,11 +35,11 @@ class LogIn extends Component {
     async doLogIn() {
 
         if (this.state.username == '') {
-            console.log('no id')
+            alert('username is empty.')
             return;
         }
         if (this.state.password == '') {
-            console.log('no pw')
+            alert('password is empty.')
             return;
         }
 
@@ -48,7 +48,7 @@ class LogIn extends Component {
         })
 
         try { 
-            
+
             let res = await fetch('/login', {
                 method: 'post',
                 headers: {
@@ -62,6 +62,7 @@ class LogIn extends Component {
             });
 
             let result = await res.json();
+            console.log(result)
             if (result && result.success) {
                 UserStore.isLoggedIn = true;
                 UserStore.username = result.username;
@@ -76,7 +77,6 @@ class LogIn extends Component {
                 console.log(e);
                 this.resetForm();
         }
-
     }
 
     render() {

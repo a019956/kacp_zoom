@@ -1,4 +1,3 @@
-
 const express       = require('express');
 const app           = express();
 const path          = require('path');
@@ -14,7 +13,6 @@ app.use(express.json());
 
 // ENV variables
 const port = 3000;
-
 // Database
 const pool = new Pool({
     user: 'postgres',
@@ -24,7 +22,7 @@ const pool = new Pool({
     port: 5432,
 })
 
-pool.query('SELECT NOW()', (err, res) => {
+db.query('SELECT NOW()', (err, res) => {
     console.log(err, res)
     pool.end()
 });
@@ -57,7 +55,7 @@ app.use(session({
     }
 }));
 
-new Router(app, pool);
+new Router(app, db);
 
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'))
