@@ -4,8 +4,10 @@ import '../styles/SubmitButton.css'
 class SubmitButton extends Component {
     render() {
         return (
-            <button className='log-in-button'
-            onClick = {this.props.onSubmit}>
+            <button 
+            className='log-in-button'
+            type = 'submit'
+            onSubmit = {this.props.onSubmit}>
                 {this.props.text}
             </button>
         )};

@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express       = require('express');
 const app           = express();
 const path          = require('path');
@@ -15,11 +16,11 @@ app.use(express.json());
 const port = 3000;
 // Database
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'kacp_zoom',
-    password: '9956',
-    port: 5432,
+    // user: 'postgres',
+    // host: 'localhost',
+    // database: 'kacp_zoom',
+    // password: '9956',
+    // port: 5432,
 })
 
 db.query('SELECT NOW()', (err, res) => {

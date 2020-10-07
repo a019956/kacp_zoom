@@ -62,7 +62,6 @@ class LogIn extends Component {
             });
 
             let result = await res.json();
-            console.log(result)
             if (result && result.success) {
                 UserStore.isLoggedIn = true;
                 UserStore.username = result.username;
@@ -81,7 +80,8 @@ class LogIn extends Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="container"
+            >
                 <InputField
                 label='Username:'
                 type='username'
@@ -89,6 +89,7 @@ class LogIn extends Component {
                 name='username'
                 value={this.state.username}
                 onChange = {this.handleChange}
+                onSubmit = {() => {this.doLogIn()}}
                 />
                 <InputField
                 label='Password:'
@@ -97,6 +98,7 @@ class LogIn extends Component {
                 name='password'
                 value={this.state.password}
                 onChange = {this.handleChange}
+                onSubmit = {() => {this.doLogIn()}}
                 />
                 <SubmitButton
                 onSubmit = {() => {this.doLogIn()}}
