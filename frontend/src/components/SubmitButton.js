@@ -7,7 +7,7 @@ class SubmitButton extends Component {
             <button 
             className='log-in-button'
             type = 'submit'
-            onSubmit = {this.props.onSubmit}>
+            onClick = {this.props.onSubmit}>
                 {this.props.text}
             </button>
         )};

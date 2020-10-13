@@ -3,6 +3,7 @@ import '../styles/LogIn.css'
 import InputField from '../components/InputField'
 import SubmitButton from '../components/SubmitButton'
 import UserStore from '../stores/UserStore';
+import log_in_image from '../components/log-in-image.png'
 
 class LogIn extends Component {
     constructor(props) {
@@ -82,6 +83,7 @@ class LogIn extends Component {
         return (
             <div className="container"
             >
+                <img src = {log_in_image} className = "log-in-image" alt = "image"/>
                 <InputField
                 label='Username:'
                 type='username'
