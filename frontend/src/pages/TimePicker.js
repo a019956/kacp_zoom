@@ -11,18 +11,21 @@ import '../styles/TimePicker.css';
 class TimePicker extends Component {
     constructor(props) {
         super(props);
+        
         this.state = {
+            username: 'username',
             date: '',// new Date(),
-            time: '',
-            duration: '',
+            startTime: '',
+            endTime: '',
             purpose: '',
-            disabledDays: '',
             buttonDisabled: false,
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
         this.handleTimeChange = this.handleTimeChange.bind(this);
         this.doAppointment = this.doAppointment.bind(this);
+        this.timeToInt = this.timeToInt.bind(this);
+        this.timesToDuration = this.timesToDuration.bind(this);
     };
 
     handleChange(e) {
@@ -37,29 +40,63 @@ class TimePicker extends Component {
         this.setState({[name]: value});
     }
 
-    async doAppointment() {
-        const date = this.state.date.toLocaleDateString('en-GB');
-        console.log(date)
-        const time = this.state.time.toLocaleTimeString('en-GB');
-        const duration = this.state.duration;
-        const purpose = this.state.duration;
+    timeToInt(time) {
+        let timeString = ''
+        time.split(":").forEach((element) => {
+            timeString += element;
+        });
+        var timeInt = parseInt(timeString)
+        return timeInt;
+    }
 
-        if (date === '' || time === '' || duration === '' || purpose === ''){
+    timesToDuration(startTimeInt, endTimeInt) {
+        var duration = [];
+        while(startTimeInt <= endTimeInt) {
+            duration.push(startTimeInt);
+            if (startTimeInt%100 === 0) {
+                startTimeInt += 30
+            }
+            else {
+                startTimeInt += 70
+            }
+        }
+        return duration;
+    }
+    
+    async doAppointment() {
+        if (
+            this.state.date === '' || 
+            this.state.startTime === '' || 
+            this.state.endTime === '' || 
+            this.state.purpose === ''){
             alert('Please fill out all fields.')
             return;
         }
-        //FUNCTION TO UPDATE CURRENT TIME & PASS ERROR IF SOMEONE TRIES TO MAKE AN APPOINTMENT BEFORE
         
-        const currentTime = (new Date()).toLocaleTimeString('en-GB');
+        const username = this.state.username;
+        const date = this.state.date.toLocaleDateString('en-GB');
+        const startTime = this.state.startTime.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
+        const endTime = this.state.endTime.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
+        const purpose = this.state.purpose;
 
-        if (currentTime > time){
+        var startTimeInt = this.timeToInt(startTime);
+        var endTimeInt = this.timeToInt(endTime);
+        console.log(endTimeInt)
+
+        //if the date passes 12:00 don't allow appointment.
+        if (this.state.date < this.state.startTime || startTimeInt > endTimeInt){
             alert('Invalid time.')
             return;
         }
+
         this.setState({
             buttonDisabled: true
         })
-        
+
+        //make duration into duration array with 30 minute increments.
+        var duration = this.timesToDuration(startTimeInt, endTimeInt)
+        console.log(duration)
+
         try { 
             let res = await fetch('/appointment', {
                 method: 'post',
@@ -68,8 +105,8 @@ class TimePicker extends Component {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
+                    username: username,
                     date: date,
-                    time: time,
                     duration: duration,
                     purpose: purpose,
                 })
@@ -91,39 +128,50 @@ class TimePicker extends Component {
     }
 
 
+    
     render() {
-        const { date, time } = this.state;
+        const { date, startTime, endTime } = this.state;
         return (
                 <div className="AppointmentPicker">
                     <DatePicker
+                        className = "date-picker"
                         name="date"
                         selected={date}
                         onChange={(date) => this.handleDateChange(date, "date")}
                         onSelect={this.handleClick}
                         placeholderText="Select Date"
                         dateFormat="MM/dd/yyyy"
-                        minDate={new Date()}
-                        maxDate={addDays(new Date(), 7)}
+                        minDate={addDays(new Date(), 1)}
+                        maxDate={addDays(new Date(), 8)}
                     />
                     <DatePicker
-                        name="time"
-                        selected={time}
-                        onChange={(time) => this.handleDateChange(time, "time")}
+                        className = "start-time-picker"
+                        name="startTime"
+                        selected={startTime}
+                        onChange={(startTime) => this.handleDateChange(startTime, "startTime")}
                         onSelect={this.handleClick}
-                        placeholderText="Select Time"
+                        placeholderText="Select Starting Time"
                         showTimeSelect
                         showTimeSelectOnly
                         timeFormat="HH:mm"
-                        timeIntervals={15}
+                        timeIntervals={30}
                         dateFormat="h:mm aa"
                     />
-                    <InputField 
-                    className = "DurationPicker"
-                        type = "number"
-                        name = "duration"
-                        value = {this.state.duration}
-                        onChange = {this.handleChange}
+
+                    <DatePicker
+                        className = "end-time-picker"
+                        name="endTime"
+                        selected={endTime}
+                        onChange={(endTime) => this.handleDateChange(endTime, "endTime")}
+                        onSelect={this.handleClick}
+                        placeholderText="Select Ending Time"
+                        showTimeSelect
+                        showTimeSelectOnly
+                        timeFormat="HH:mm"
+                        timeIntervals={30}
+                        dateFormat="h:mm aa"
                     />
+
                     <InputField 
                     className="PurposePicker"
                         type="text"
@@ -139,4 +187,5 @@ class TimePicker extends Component {
         );
     }
 }
+
 export default TimePicker;

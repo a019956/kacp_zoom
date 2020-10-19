@@ -16,6 +16,7 @@
     "express-mysql-session": "^2.1.4",
     "express-session": "^1.17.1",
     "mysql": "^2.18.1",
-    "pg": "^8.3.3"
+    "pg": "^8.3.3",
+    "postgres-array": "^2.0.0"
   }
 }
