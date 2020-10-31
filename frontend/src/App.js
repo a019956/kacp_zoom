@@ -8,8 +8,16 @@ import './styles/LogIn.css'
 
 class App extends Component {
 
-    async componentDidMount() {
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            username: 'username',
+        }
+    };
 
+
+    async componentDidMount() {
         try{
             let res = await fetch ('/isLoggedIn', {
                 method: 'post',
@@ -24,7 +32,6 @@ class App extends Component {
             if (result && result.success) {
                 UserStore.loading = false;
                 UserStore.isLoggedIn = true;
-                UserStore.username = result.username;
             }
 
             else {
@@ -32,6 +39,7 @@ class App extends Component {
                 UserStore.isLoggedIn = false;
             }
         }
+
         catch(e) {
             UserStore.loading = false;
             UserStore.isLoggedIn = false;
@@ -39,20 +47,20 @@ class App extends Component {
     };
 
     render() {
-//         if (UserStore.isLoggedIn) {
+        
+        if (UserStore.isLoggedIn) {
             return (
                 <div className="time-picker-page">
                     <Navbar />
-                    Welcome {UserStore.username}
-                    <TimePicker />
+                    <TimePicker/>
                 </div>
                 )}
-//         else {
-//             return (
-//                 <div className="log-in-page">
-//                     <LogIn />
-//                 </div>
-//         )};
-//     }
+        else {
+            return (
+                <div className="log-in-page">
+                    <LogIn />
+                </div>
+        )};
+    }
 }
 export default observer(App);

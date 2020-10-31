@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import '../styles/LogIn.css'
 import InputField from '../components/InputField'
 import SubmitButton from '../components/SubmitButton'
 import UserStore from '../stores/UserStore';
 import log_in_image from '../components/log-in-image.png'
+import '../styles/LogIn.css'
 
 class LogIn extends Component {
     constructor(props) {
@@ -66,6 +66,7 @@ class LogIn extends Component {
             if (result && result.success) {
                 UserStore.isLoggedIn = true;
                 UserStore.username = result.username;
+                console.log(result.username);
             }
 
             else if (result && result.success === false) {
@@ -81,9 +82,9 @@ class LogIn extends Component {
 
     render() {
         return (
-            <div className="container"
-            >
+            <div className="login-container">
                 <img src = {log_in_image} className = "log-in-image" alt = "image"/>
+
                 <InputField
                 label='Username:'
                 type='username'
@@ -93,6 +94,7 @@ class LogIn extends Component {
                 onChange = {this.handleChange}
                 onSubmit = {() => {this.doLogIn()}}
                 />
+
                 <InputField
                 label='Password:'
                 type='password'
@@ -102,10 +104,12 @@ class LogIn extends Component {
                 onChange = {this.handleChange}
                 onSubmit = {() => {this.doLogIn()}}
                 />
+
                 <SubmitButton
                 onSubmit = {() => {this.doLogIn()}}
                 text = {'Log In'}
                 />
+
             </div>
         )};
 }

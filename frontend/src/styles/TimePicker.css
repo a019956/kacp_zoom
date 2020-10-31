@@ -1,5 +1,18 @@
-.AppointmentPicker {
+.appointment-container {
     width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.AppointmentChecker{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.AppointmentPicker {
+    width: 70%;
     display: flex;
     flex-direction: column;
     align-items: center;

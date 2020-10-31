@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import InputField from '../components/InputField'
 import SubmitButton from '../components/SubmitButton'
+import AppointmentList from '../components/AppointmentList'
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { addDays } from 'date-fns';
 import UserStore from '../stores/UserStore'
+
 
 import '../styles/TimePicker.css';
 
@@ -13,12 +15,16 @@ class TimePicker extends Component {
         super(props);
         
         this.state = {
-            username: 'username',
-            date: '',// new Date(),
+            username: '',
+            date: '',
             startTime: '',
             endTime: '',
             purpose: '',
             buttonDisabled: false,
+            appointments: [{date: '11/30',
+                time: '11:30',
+                purpose: '사랑방',
+        }],
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
@@ -63,6 +69,38 @@ class TimePicker extends Component {
         return duration;
     }
     
+    //when page loads, check appointments that are under the current username
+    async componentDidMount() {
+        const username = UserStore.username;
+        console.log("THIS IS USERNAME: " + username)
+
+        try{
+    
+            let res = await fetch ('/getAppointment', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/JSON',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                })
+            });
+
+            let result = await res.json();
+
+            const appointments = result.appointments;
+            this.setState({appointments})
+        }
+
+        catch(e) {
+            UserStore.loading = false;
+            UserStore.isLoggedIn = false;
+        }
+
+    };
+
+
     async doAppointment() {
         if (
             this.state.date === '' || 
@@ -73,7 +111,7 @@ class TimePicker extends Component {
             return;
         }
         
-        const username = this.state.username;
+        const username = UserStore.username;
         const date = this.state.date.toLocaleDateString('en-GB');
         const startTime = this.state.startTime.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
         const endTime = this.state.endTime.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
@@ -95,8 +133,6 @@ class TimePicker extends Component {
 
         //make duration into duration array with 30 minute increments.
         var duration = this.timesToDuration(startTimeInt, endTimeInt)
-        console.log(duration)
-
         try { 
             let res = await fetch('/appointment', {
                 method: 'post',
@@ -114,8 +150,7 @@ class TimePicker extends Component {
             
             let result = await res.json();
             if (result && result.success) {
-                UserStore.madeAppointment = true;
-                UserStore.username = result.username;
+                console.log(result.username)
             }
 
             else if (result && result.success === false) {
@@ -127,12 +162,12 @@ class TimePicker extends Component {
         }
     }
 
-
-    
     render() {
         const { date, startTime, endTime } = this.state;
         return (
+            <div className = "appointment-container">
                 <div className="AppointmentPicker">
+                    <h3 className = 'welcome'>{UserStore.username}</h3>
                     <DatePicker
                         className = "date-picker"
                         name="date"
@@ -184,6 +219,17 @@ class TimePicker extends Component {
                         text='Confirm'
                     />
                 </div>
+
+                <div className = "AppointmentChecker">
+                    <AppointmentList
+                        appointmentCards = {this.state.appointments}
+                    />
+                    <SubmitButton
+                        onSubmit = {() => {this.componentDidMount()}}
+                        text='Testing'
+                    />
+                </div>
+            </div>
         );
     }
 }
