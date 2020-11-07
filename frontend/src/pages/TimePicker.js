@@ -21,10 +21,7 @@ class TimePicker extends Component {
             endTime: '',
             purpose: '',
             buttonDisabled: false,
-            appointments: [{date: '11/30',
-                time: '11:30',
-                purpose: '사랑방',
-        }],
+            appointments: [],
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
@@ -100,6 +97,27 @@ class TimePicker extends Component {
 
     };
 
+    async getZoomMeeting() {
+        try{
+            let res = await fetch ('/getZoomMeeting', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/JSON',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: 'itteam@kacp.org'
+                })
+            })
+            let result = await res.json();
+            const meetingUrl = result.meetingUrl;
+            console.log(meetingUrl);
+        }
+
+        catch(e) {
+            console.log(e)
+        }
+    };
 
     async doAppointment() {
         if (
@@ -145,12 +163,14 @@ class TimePicker extends Component {
                     date: date,
                     duration: duration,
                     purpose: purpose,
+                    startTime: startTime,
+                    endTime: endTime,
                 })
             });
             
             let result = await res.json();
             if (result && result.success) {
-                console.log(result.username)
+                alert(result.msg);
             }
 
             else if (result && result.success === false) {
@@ -226,8 +246,13 @@ class TimePicker extends Component {
                     />
                     <SubmitButton
                         onSubmit = {() => {this.componentDidMount()}}
-                        text='Testing'
+                        text='Appointments'
                     />
+                    <SubmitButton
+                        onSubmit = {() => {this.getZoomMeeting()}}
+                        text='Testing Zoom Meeting'
+                    />
+
                 </div>
             </div>
         );

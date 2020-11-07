@@ -1,11 +1,26 @@
+require('dotenv').config()
+
+//required modules for zoom API
+const jwt = require('jsonwebtoken');
+const config = require('./config');
+const rp = require('request-promise');
+
+//required modules for 
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 const session       = require('express-session');
 const postgresArray = require('postgres-array')
 
+const payload = {
+    iss: config.APIKey,
+    exp: ((new Date()).getTime() + 5000)
+};
+const token = jwt.sign(payload, config.APISecret);
+
 class Router {
 
     constructor(app, db) {
+        this.getZoomMeeting(app, db);
         this.login(app, db);
         this.logout(app, db);
         this.isLoggedIn(app, db);
@@ -14,7 +29,68 @@ class Router {
     }
 
 
-    
+    //Routes for zoom API
+    //Use the ApiKey and APISecret from config.js
+
+    getZoomMeeting(app, db){
+        //use userinfo from the form and make a post req to /userinfo
+        app.post('/getZoomMeeting', (req, res) => {
+            //store the email address of the user in the email variable
+
+            //const email = req.body.email;
+
+            //check if the email was stored in the console
+            const email = 'zoom01@kacp.org'
+            console.log(email);
+            
+            //Store the options for Zoom API which will be used to make an API call later.
+            var options = {
+            //You can use a different uri if you're making an API call to a different Zoom endpoint.
+            uri: "https://api.zoom.us/v2/users/"+email,
+            qs: {
+                status: 'active' 
+            },
+            auth: {
+                'bearer': token
+            },
+            headers: {
+                'User-Agent': 'Zoom-api-Jwt-Request',
+                'content-type': 'application/json'
+            },
+            json: true //Parse the JSON string in the res
+        };
+        
+        //Use req-promise module's .then() method to make req calls.
+        rp(options)
+            .then(function (response) {
+                //printing the res on the console
+                console.log('User has', response);
+                //console.log(typeof res);
+                const resp = response
+                //Adding html to the page
+                var title1 ='<center><h3>Your token: </h3></center>' 
+                var result1 = title1 + '<code><pre style="background-color:#aef8f9;">' + token + '</pre></code>';
+                var title ='<center><h3>User\'s information:</h3></center>' 
+                //Prettify the JSON format using pre tag and JSON.stringify
+                var result = title + '<code><pre style="background-color:#aef8f9;">'+JSON.stringify(resp, null, 2)+ '</pre></code>'
+                console.log(result1)
+                console.log(result)
+                console.log(title1)
+                res.send(result1 + '<br>' + result);
+
+                console.log(response.personal_meeting_url)
+        
+            })
+            .catch(function (err) {
+                // API call failed...
+                console.log('API call failed, reason ', err);
+            });
+        
+        
+        });
+
+    }
+
     login(app, db) {
         app.post('/login', async (req, res) => {
             const {username, password} = req.body;
@@ -137,77 +213,75 @@ class Router {
     //Time picker routers
     appointment(app, db) {
         app.post('/appointment', async (req, res) => {
-            const {username, date, duration, purpose} = req.body;
-            console.log("THIS IS APPOINTMENT USERNAME: " + username)
+            const {username, date, duration, purpose, startTime, endTime} = req.body;
 
-            //parse json to string
+            //loop through zoom accounts
             const zoom = await db.query("SELECT ARRAY(SELECT zoom_username FROM zoom_account)");
             const z_username = zoom.rows[0].array
             var i = 0
+
             //loop through array of zoom accounts to check availability of any of them
             for (let z of z_username) {
                 i = 0
-                //loop through duration to check if any time for availability of the selected account
+                //check the requested appointment time to see if the times are taken
                 for (let t of duration) {
-                    
-                    //if any of the time duration collides with the already existing appointment, check next account.
-                    const availability = await db.query("SELECT * FROM appointment WHERE date = $1 AND time = $2 AND zoom_username = $3", [date, t, z]);
-                    //if time is available, check the next increment.
-                    console.log("availability " + availability.rows.length)
+                    const availability = await db.query("SELECT duration FROM appointment WHERE date = $1 AND zoom_username = $2 AND $3=ANY(duration)", [date, z, t])
+
+                    //if time is not taken, check the next time
                     if (availability.rows.length === 0) {
+                    
                         if (i < duration.length) {
                             i += 1
-                            console.log(t +  " for " +z + " on " + date + " is good")
                             continue;
                         }
                     }
-                    //if time collides with other time with the account, check the next account.
+                //if time collides with other time with the account, check the next account.
                     else {
                         break;
                     }
                 }
-                //when all time increments for given account is available, insert to database and pass in success.
-                if (i === duration.length) {   
-                    
-                        duration.forEach((t) => {
-                            db.query("INSERT INTO appointment(date, time, zoom_username, username, purpose) values($1, $2, $3, $4, $5)", [date, t, z, username, purpose]);
-                        })
+                //when all duration for a zoom account is available, go ahead and make the appointment.
+                if (i === duration.length) { 
+
+                    db.query("INSERT INTO appointment(date, duration, zoom_username, username, purpose, start_time, end_time) values($1, $2, $3, $4, $5, $6, $7)", [date, duration, z, username, purpose, startTime, endTime]);
                         res.json({
                             success: true,
                             msg: "Appointment successfully made."
-
                         })
                         return;
+                    }
                 }
+
+                //if no zoom account is available for the given time duration, send in error.
+                res.json({
+                    success: false,
+                    msg: "Time is taken, please choose a different time."
+                })
             }
-        });
-    }
+        )}
+
     //get and return appointments to be displayed for user
     getAppointment(app, db){
         app.post('/getAppointment', async (req, res) => {
             const {username} = req.body;
 
-            console.log("THIS IS ROUTER USERNAME: " + username)
-            const d = await db.query("SELECT ARRAY(SELECT date FROM appointment WHERE username = $1)", [username])
-            const t = await db.query("SELECT ARRAY(SELECT time FROM appointment WHERE username = $1)", [username])
-            const p = await db.query("SELECT ARRAY(SELECT purpose FROM appointment WHERE username = $1)", [username])
-            const date = d.rows[0].array
-            const time = t.rows[0].array
-            const purpose = p.rows[0].array
-            const length = date.length
+            //get all appointments under the username
+            const data = await db.query("SELECT * FROM appointment WHERE username = $1", [username])
+            const length = data.rows.length
             var appointments = [];
 
             for (var i=0; i<length; i++) {
                 const appointment = {
-                    date: date[i],
-                    time: time[i],
-                    purpose: purpose[i],
+                    date: data.rows[i].date,
+                    startTime: data.rows[i].start_time,
+                    endTime: data.rows[i].end_time,
+                    purpose: data.rows[i].purpose,
+                    zoom_username: data.rows[i].zoom_username,
                     }
-
                 appointments.push(appointment)
+
+                console.log(appointment)
                 }
-                console.log(appointments)
-                console.log(username)
 
             res.json({
                 success: true,

@@ -7,11 +7,20 @@ class AppointmentList extends Component {
         const appointmentCards = this.props.appointmentCards.map((r, index) => (
             <AppointmentCards key = {r.id} {...r} />
         ));
+        if (appointmentCards === [] ) {
         return (
-            <div>
-                {appointmentCards}
+            <div className = 'empty-appointment-list'>
+                currently no appointments are made.
             </div>
         )
+        }
+        else {
+            return (
+            <div className = 'appointment-list'>
+                {appointmentCards}
+            </div>
+            )
+        }
     }
 }
 

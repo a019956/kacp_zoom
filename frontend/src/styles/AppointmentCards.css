@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap");
+
+.appointment-card {
+	background-color: rgb(182, 199, 236);
+	width: 300px;
+	margin: 1%;
+	border: 1px solid;
+    border-radius: 4px;
+}
+
+.appointment-content{
+    align-self: center;
+    font-size: 10px;
+    font-family: 'Raleway', sans-serif;
+}

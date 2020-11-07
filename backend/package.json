@@ -15,8 +15,11 @@
     "express": "^4.17.1",
     "express-mysql-session": "^2.1.4",
     "express-session": "^1.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "pg": "^8.3.3",
-    "postgres-array": "^2.0.0"
+    "postgres-array": "^2.0.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
   }
 }

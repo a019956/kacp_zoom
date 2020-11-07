@@ -66,7 +66,6 @@ class LogIn extends Component {
             if (result && result.success) {
                 UserStore.isLoggedIn = true;
                 UserStore.username = result.username;
-                console.log(result.username);
             }
 
             else if (result && result.success === false) {
@@ -83,7 +82,7 @@ class LogIn extends Component {
     render() {
         return (
             <div className="login-container">
-                <img src = {log_in_image} className = "log-in-image" alt = "image"/>
+                {/* <img src = {log_in_image} className = "log-in-image" alt = "image"/> */}
 
                 <InputField
                 label='Username:'
@@ -109,7 +108,6 @@ class LogIn extends Component {
                 onSubmit = {() => {this.doLogIn()}}
                 text = {'Log In'}
                 />
-
             </div>
         )};
 }
