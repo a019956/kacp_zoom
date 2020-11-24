@@ -8,7 +8,6 @@ class Navbar extends Component {
 				<h1>KACP Zoom Scheduler</h1>
 				<nav>
 					<ul className='navItems'>
-						<li><a>Log In</a></li>
 					</ul>
 				</nav>
 			</header>

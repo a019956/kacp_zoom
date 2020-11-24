@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import '../styles/LogIn.css'
 import InputField from '../components/InputField'
 import SubmitButton from '../components/SubmitButton'
 import UserStore from '../stores/UserStore';
 import log_in_image from '../components/log-in-image.png'
-import '../styles/LogIn.css'
+
 
 class LogIn extends Component {
     constructor(props) {
@@ -81,33 +82,43 @@ class LogIn extends Component {
 
     render() {
         return (
-            <div className="login-container">
-                {/* <img src = {log_in_image} className = "log-in-image" alt = "image"/> */}
+            <div className="login">
 
-                <InputField
-                label='Username:'
-                type='username'
-                placeholder='Username'
-                name='username'
-                value={this.state.username}
-                onChange = {this.handleChange}
-                onSubmit = {() => {this.doLogIn()}}
-                />
+                <div className="input-fields">
 
-                <InputField
-                label='Password:'
-                type='password'
-                placeholder='Password'
-                name='password'
-                value={this.state.password}
-                onChange = {this.handleChange}
-                onSubmit = {() => {this.doLogIn()}}
-                />
+                    <InputField
+                    label='Username:'
+                    type='username'
+                    placeholder='Username'
+                    name='username'
+                    value={this.state.username}
+                    onChange = {this.handleChange}
+                    onSubmit = {() => {this.doLogIn()}}
+                    />
 
-                <SubmitButton
-                onSubmit = {() => {this.doLogIn()}}
-                text = {'Log In'}
-                />
+                    <InputField
+                    label='Password:'
+                    type='password'
+                    placeholder='Password'
+                    name='password'
+                    value={this.state.password}
+                    onChange = {this.handleChange}
+                    onSubmit = {() => {this.doLogIn()}}
+                    />
+
+                    <SubmitButton
+                    onSubmit = {() => {this.doLogIn()}}
+                    text = {'Log In'}
+                    />
+
+                </div>
+
+                <div className="account-request">
+
+                    
+
+                </div>
+
             </div>
         )};
 }

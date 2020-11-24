@@ -4,8 +4,11 @@ import SubmitButton from '../components/SubmitButton'
 import AppointmentList from '../components/AppointmentList'
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { addDays } from 'date-fns';
+import { addDays , format } from 'date-fns';
 import UserStore from '../stores/UserStore'
+
+
+import SmallButton from '../components/SmallButton'
 
 
 import '../styles/TimePicker.css';
@@ -27,6 +30,7 @@ class TimePicker extends Component {
         this.handleDateChange = this.handleDateChange.bind(this);
         this.handleTimeChange = this.handleTimeChange.bind(this);
         this.doAppointment = this.doAppointment.bind(this);
+        this.deleteAppointment = this.deleteAppointment.bind(this);
         this.timeToInt = this.timeToInt.bind(this);
         this.timesToDuration = this.timesToDuration.bind(this);
     };
@@ -43,6 +47,7 @@ class TimePicker extends Component {
         this.setState({[name]: value});
     }
 
+    //function to change time string to 4 digit integer value for calculations
     timeToInt(time) {
         let timeString = ''
         time.split(":").forEach((element) => {
@@ -53,23 +58,23 @@ class TimePicker extends Component {
     }
 
     timesToDuration(startTimeInt, endTimeInt) {
-        var duration = [];
+        var durationArray = [];
         while(startTimeInt <= endTimeInt) {
-            duration.push(startTimeInt);
-            if (startTimeInt%100 === 0) {
-                startTimeInt += 30
+            durationArray.push(startTimeInt);
+            if (startTimeInt%10000 === 0) {
+                startTimeInt += 3000
             }
             else {
-                startTimeInt += 70
+                startTimeInt += 7000
             }
         }
-        return duration;
+        return durationArray;
     }
     
     //when page loads, check appointments that are under the current username
-    async componentDidMount() {
+    async getAppointment() {
         const username = UserStore.username;
-        console.log("THIS IS USERNAME: " + username)
+        const today = format(new Date(), 'yyyy-MM-dd')
 
         try{
     
@@ -81,6 +86,7 @@ class TimePicker extends Component {
                 },
                 body: JSON.stringify({
                     username: username,
+                    today: today,
                 })
             });
 
@@ -97,28 +103,7 @@ class TimePicker extends Component {
 
     };
 
-    async getZoomMeeting() {
-        try{
-            let res = await fetch ('/getZoomMeeting', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/JSON',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: 'itteam@kacp.org'
-                })
-            })
-            let result = await res.json();
-            const meetingUrl = result.meetingUrl;
-            console.log(meetingUrl);
-        }
-
-        catch(e) {
-            console.log(e)
-        }
-    };
-
+    //create appointment based on infromation given by the user
     async doAppointment() {
         if (
             this.state.date === '' || 
@@ -128,16 +113,16 @@ class TimePicker extends Component {
             alert('Please fill out all fields.')
             return;
         }
+
         
         const username = UserStore.username;
-        const date = this.state.date.toLocaleDateString('en-GB');
-        const startTime = this.state.startTime.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
-        const endTime = this.state.endTime.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'});
+        const date = this.state.date.toLocaleDateString("fr-CA");
+        const startTime = this.state.startTime.toLocaleTimeString("en-GB", {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+        const endTime = this.state.endTime.toLocaleTimeString("en-GB", {hour: '2-digit', minute: '2-digit', second: '2-digit'});
         const purpose = this.state.purpose;
 
         var startTimeInt = this.timeToInt(startTime);
         var endTimeInt = this.timeToInt(endTime);
-        console.log(endTimeInt)
 
         //if the date passes 12:00 don't allow appointment.
         if (this.state.date < this.state.startTime || startTimeInt > endTimeInt){
@@ -150,9 +135,12 @@ class TimePicker extends Component {
         })
 
         //make duration into duration array with 30 minute increments.
-        var duration = this.timesToDuration(startTimeInt, endTimeInt)
+        var durationArray = this.timesToDuration(startTimeInt, endTimeInt)
+        //duration in minutes
+
+        var duration = (durationArray.length - 1) * 30
         try { 
-            let res = await fetch('/appointment', {
+            let res = await fetch('/doAppointment', {
                 method: 'post',
                 headers: {
                     'Accept': 'application/JSON',
@@ -162,9 +150,11 @@ class TimePicker extends Component {
                     username: username,
                     date: date,
                     duration: duration,
+                    durationArray: durationArray,
                     purpose: purpose,
                     startTime: startTime,
                     endTime: endTime,
+
                 })
             });
             
@@ -180,14 +170,55 @@ class TimePicker extends Component {
         catch(e) {
             console.log(e);
         }
+        this.getAppointment()
+    }
+
+    startMeeting(start_url) {
+        window.open(start_url)
+    }
+
+    async deleteAppointment(meeting_id) {
+        const id = meeting_id
+        console.log(id)
+        console.log(meeting_id)
+        try { 
+            let res = await fetch('/deleteAppointment', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/JSON',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id
+                })
+            });
+            
+            let result = await res.json();
+            if (result && result.success) {
+                alert(result.msg);
+            }
+
+            else if (result && result.success === false) {
+                alert(result.msg);
+            }
+        }
+        catch(e) {
+            console.log(e);
+        }
+        this.getAppointment()
+    }
+    //when page loads, get appointments under the username.
+    componentDidMount() {
+        this.getAppointment();
     }
 
     render() {
         const { date, startTime, endTime } = this.state;
         return (
-            <div className = "appointment-container">
+            <div className = "AppointmentContainer">
                 <div className="AppointmentPicker">
-                    <h3 className = 'welcome'>{UserStore.username}</h3>
+                    <h3 className = 'welcome'>Hello, {UserStore.username}</h3>
+                    <h4 classNAme = 'today'>Today is: {this.state.today}</h4>
                     <DatePicker
                         className = "date-picker"
                         name="date"
@@ -195,7 +226,7 @@ class TimePicker extends Component {
                         onChange={(date) => this.handleDateChange(date, "date")}
                         onSelect={this.handleClick}
                         placeholderText="Select Date"
-                        dateFormat="MM/dd/yyyy"
+                        dateFormat="yyyy-MM-dd"
                         minDate={addDays(new Date(), 1)}
                         maxDate={addDays(new Date(), 8)}
                     />
@@ -240,17 +271,20 @@ class TimePicker extends Component {
                     />
                 </div>
 
-                <div className = "AppointmentChecker">
+                <div 
+                className = "AppointmentChecker" 
+                onload="this.getAppointment()">
+                    <div
+                    className="explanation"
+                    type="text"></div>
                     <AppointmentList
                         appointmentCards = {this.state.appointments}
+                        onStart={this.startMeeting}
+                        onDelete={this.deleteAppointment}
                     />
                     <SubmitButton
-                        onSubmit = {() => {this.componentDidMount()}}
+                        onSubmit = {() => {this.getAppointment()}}
                         text='Appointments'
-                    />
-                    <SubmitButton
-                        onSubmit = {() => {this.getZoomMeeting()}}
-                        text='Testing Zoom Meeting'
                     />
 
                 </div>
