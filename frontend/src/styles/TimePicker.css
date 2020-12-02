@@ -24,3 +24,11 @@
     border-bottom: 2px solid black; 
 }
 
+.GetAppointmentButton{
+    font-size: 12px;
+    padding: 3px 3px;
+    border: 0;
+    background-color: #3968be;
+    color: #fff;
+    border-radius: 3px;
+}

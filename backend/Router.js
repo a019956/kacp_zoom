@@ -153,15 +153,12 @@ class Router {
             var {join_url} = ''
             var {start_url} = ''
             var {meeting_id} = ''
-            
-            console.log(date)
-            console.log(startTime)
+
             //loop through zoom accounts
             const zoom = await db.query("SELECT ARRAY(SELECT zoom_username FROM zoom_account)");
             const z_username = zoom.rows[0].array
             var i = 0
             const zoomStartTime = (date+"T"+startTime+"Z")
-            console.log(zoomStartTime)
 
             //loop through array of zoom accounts to check availability of any of them
             for (let z of z_username) {
@@ -187,8 +184,6 @@ class Router {
                 if (i === durationArray.length) { 
 
                     const email = z
-                    console.log(email);
-                    console.log(duration)
                     //Post request to zoom 
                     //Use req-promise module's .then() method to make req calls.
                     //Store the options for Zoom API which will be used to make an API call later.
@@ -252,7 +247,6 @@ class Router {
     deleteAppointment(app, db){
         app.post('/deleteAppointment', async (req, res) => {
             const {id} = req.body;
-            console.log(id)
 
         var options = {
             //You can use a different uri if you're making an API call to a different Zoom endpoint.
@@ -293,14 +287,42 @@ class Router {
     getAppointment(app, db){
         app.post('/getAppointment', async (req, res) => {
             const {username, today} = req.body;
-            console.log(today)
-
             //delete all appointments that ended
-            await db.query("DELETE FROM appointment WHERE date < $1", [today])
-
+            const delete_array = await db.query("SELECT id FROM appointment WHERE date < $1", [today])
+            var length = delete_array.rows.length
+            console.log(delete_array.rows.length)
+            for (var i=0; i<length; i++) {
+                var id = delete_array.rows[i].id
+                var options = {
+                    //You can use a different uri if you're making an API call to a different Zoom endpoint.
+                        method: "DELETE",
+                        uri: "https://api.zoom.us/v2/meetings/"+id,
+                        qs: {
+                            status: 'active' 
+                        },
+                        auth: {
+                            'bearer': token
+                        },
+                        headers: {
+                            'User-Agent': 'Zoom-api-Jwt-Request',
+                            'content-type': 'application/json'
+                        },
+                        json: true //Parse the JSON string in the res
+                    };
+                    db.query("DELETE FROM appointment WHERE id = $1", [id]);
+                    rp(options)
+                    .then(function (response) {
+                        //printing the res on the console
+                        console.log(response)
+                    })
+                    .catch(function (err) {
+                        // API call failed...
+                        console.log('API call failed, reason ', err);
+                    });
+        }
             //get all appointments under the username
             const data = await db.query("SELECT * FROM appointment WHERE username = $1 ORDER BY date ASC, start_time DESC;", [username])
-            const length = data.rows.length
+            length = data.rows.length
             var appointments = [];
 
             //add all appointments 

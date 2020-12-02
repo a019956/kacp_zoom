@@ -16,8 +16,8 @@ class LogIn extends Component {
             buttonDisabled: false
         }
         this.handleChange = this.handleChange.bind(this);
-        this.handleLogIn = this.handleLogIn.bind(this);
         this.doLogIn = this.doLogIn.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     };
     resetForm() {
         this.setState({
@@ -28,14 +28,9 @@ class LogIn extends Component {
     handleChange(e) {
 		this.setState({[e.target.name]: e.target.value});
 	}
-    handleLogIn(e) {
-        console.log(this.state.username)
-        console.log(this.state.password)
-        this.resetForm()
-    };
 
-    async doLogIn() {
-
+    handleSubmit(e) {
+        e.preventDefault();
         if (this.state.username == '') {
             alert('username is empty.')
             return;
@@ -48,6 +43,11 @@ class LogIn extends Component {
         this.setState({
             buttonDisabled: true
         })
+
+        this.doLogIn()
+    }
+
+    async doLogIn() {
 
         try { 
 
@@ -65,8 +65,8 @@ class LogIn extends Component {
 
             let result = await res.json();
             if (result && result.success) {
-                UserStore.isLoggedIn = true;
                 UserStore.username = result.username;
+                UserStore.isLoggedIn = true;
             }
 
             else if (result && result.success === false) {
@@ -82,9 +82,11 @@ class LogIn extends Component {
 
     render() {
         return (
-            <div className="login">
+            <div className="container">
 
-                <div className="input-fields">
+                <form 
+                className="input-fields"
+                onSubmit={this.handleSubmit}>
 
                     <InputField
                     label='Username:'
@@ -93,7 +95,6 @@ class LogIn extends Component {
                     name='username'
                     value={this.state.username}
                     onChange = {this.handleChange}
-                    onSubmit = {() => {this.doLogIn()}}
                     />
 
                     <InputField
@@ -103,19 +104,15 @@ class LogIn extends Component {
                     name='password'
                     value={this.state.password}
                     onChange = {this.handleChange}
-                    onSubmit = {() => {this.doLogIn()}}
                     />
 
                     <SubmitButton
-                    onSubmit = {() => {this.doLogIn()}}
                     text = {'Log In'}
                     />
 
-                </div>
+                </form>
 
                 <div className="account-request">
-
-                    
 
                 </div>
 

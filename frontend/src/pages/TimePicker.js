@@ -6,11 +6,6 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { addDays , format } from 'date-fns';
 import UserStore from '../stores/UserStore'
-
-
-import SmallButton from '../components/SmallButton'
-
-
 import '../styles/TimePicker.css';
 
 class TimePicker extends Component {
@@ -18,6 +13,7 @@ class TimePicker extends Component {
         super(props);
         
         this.state = {
+            today: format(new Date(), 'yyyy-MM-dd'),
             username: '',
             date: '',
             startTime: '',
@@ -33,7 +29,15 @@ class TimePicker extends Component {
         this.deleteAppointment = this.deleteAppointment.bind(this);
         this.timeToInt = this.timeToInt.bind(this);
         this.timesToDuration = this.timesToDuration.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     };
+
+    componentDidMount() {
+        const username = UserStore.username
+        this.setState({username});
+        console.log(username);
+        this.getAppointment();
+    }
 
     handleChange(e) {
 		this.setState({[e.target.name]: e.target.value});
@@ -105,17 +109,8 @@ class TimePicker extends Component {
 
     //create appointment based on infromation given by the user
     async doAppointment() {
-        if (
-            this.state.date === '' || 
-            this.state.startTime === '' || 
-            this.state.endTime === '' || 
-            this.state.purpose === ''){
-            alert('Please fill out all fields.')
-            return;
-        }
-
-        
-        const username = UserStore.username;
+        const today = format(new Date(), 'yyyy-MM-dd')
+        const username = this.state.username;
         const date = this.state.date.toLocaleDateString("fr-CA");
         const startTime = this.state.startTime.toLocaleTimeString("en-GB", {hour: '2-digit', minute: '2-digit', second: '2-digit'});
         const endTime = this.state.endTime.toLocaleTimeString("en-GB", {hour: '2-digit', minute: '2-digit', second: '2-digit'});
@@ -125,7 +120,7 @@ class TimePicker extends Component {
         var endTimeInt = this.timeToInt(endTime);
 
         //if the date passes 12:00 don't allow appointment.
-        if (this.state.date < this.state.startTime || startTimeInt > endTimeInt){
+        if (this.state.date < today || startTimeInt > endTimeInt){
             alert('Invalid time.')
             return;
         }
@@ -173,14 +168,26 @@ class TimePicker extends Component {
         this.getAppointment()
     }
 
+    handleSubmit(e) {
+        e.preventDefault();
+        if (
+            this.state.date === '' || 
+            this.state.startTime === '' || 
+            this.state.endTime === '' || 
+            this.state.purpose === ''){
+            alert('Please fill out all fields.')
+            return;
+        }
+        this.doAppointment()
+    }
+
     startMeeting(start_url) {
         window.open(start_url)
     }
 
     async deleteAppointment(meeting_id) {
         const id = meeting_id
-        console.log(id)
-        console.log(meeting_id)
+
         try { 
             let res = await fetch('/deleteAppointment', {
                 method: 'post',
@@ -207,16 +214,14 @@ class TimePicker extends Component {
         }
         this.getAppointment()
     }
-    //when page loads, get appointments under the username.
-    componentDidMount() {
-        this.getAppointment();
-    }
 
+    //when page loads, get appointments under the username.
     render() {
         const { date, startTime, endTime } = this.state;
         return (
             <div className = "AppointmentContainer">
-                <div className="AppointmentPicker">
+                <form className="AppointmentPicker"
+                onSubmit={this.handleSubmit}>
                     <h3 className = 'welcome'>Hello, {UserStore.username}</h3>
                     <h4 classNAme = 'today'>Today is: {this.state.today}</h4>
                     <DatePicker
@@ -227,7 +232,7 @@ class TimePicker extends Component {
                         onSelect={this.handleClick}
                         placeholderText="Select Date"
                         dateFormat="yyyy-MM-dd"
-                        minDate={addDays(new Date(), 1)}
+                        minDate= {new Date()}
                         maxDate={addDays(new Date(), 8)}
                     />
                     <DatePicker
@@ -262,18 +267,16 @@ class TimePicker extends Component {
                     className="PurposePicker"
                         type="text"
                         name="purpose"
+                        placeholder="Purpose"
                         value = {this.state.purpose}
                         onChange={this.handleChange}
                     />
                     <SubmitButton
-                        onSubmit = {() => {this.doAppointment()}}
                         text='Confirm'
                     />
-                </div>
+                </form>
 
-                <div 
-                className = "AppointmentChecker" 
-                onload="this.getAppointment()">
+                <div className = "AppointmentChecker" >
                     <div
                     className="explanation"
                     type="text"></div>
@@ -282,11 +285,6 @@ class TimePicker extends Component {
                         onStart={this.startMeeting}
                         onDelete={this.deleteAppointment}
                     />
-                    <SubmitButton
-                        onSubmit = {() => {this.getAppointment()}}
-                        text='Appointments'
-                    />
-
                 </div>
             </div>
         );

@@ -4,8 +4,7 @@ import '../styles/InputField.css'
 class Inputfield extends Component {
     render() {
         return (
-                <form className="inputField"
-                onSubmit = {this.props.onSubmit}>
+                <div>
                     <label>
                         {this.props.label}
                     </label>
@@ -17,7 +16,7 @@ class Inputfield extends Component {
             		value={this.props.value}
             		size={15}
 					onChange={this.props.onChange} />
-                </form>
+                </div>
         );
     }
 }

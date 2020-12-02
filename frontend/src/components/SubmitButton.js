@@ -5,9 +5,9 @@ class SubmitButton extends Component {
     render() {
         return (
             <button 
-            className='log-in-button'
             type = 'submit'
-            onClick = {this.props.onSubmit}>
+            className='log-in-button'
+            >
                 {this.props.text}
             </button>
         )};
