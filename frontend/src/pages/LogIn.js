@@ -84,6 +84,7 @@ class LogIn extends Component {
         return (
             <div className="container">
 
+            <img src={log_in_image}/>
                 <form 
                 className="input-fields"
                 onSubmit={this.handleSubmit}>

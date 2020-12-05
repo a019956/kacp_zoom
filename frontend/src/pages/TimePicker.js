@@ -7,6 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { addDays , format } from 'date-fns';
 import UserStore from '../stores/UserStore'
 import '../styles/TimePicker.css';
+import Navbar from '../components/Navbar';
+import { Paper } from '@material-ui/core';
 
 class TimePicker extends Component {
     constructor(props) {
@@ -217,8 +219,13 @@ class TimePicker extends Component {
 
     //when page loads, get appointments under the username.
     render() {
-        const { date, startTime, endTime } = this.state;
+        const { date, startTime, endTime} = this.state;
         return (
+            <div>
+                <Navbar
+                    username = {this.state.username}
+                    today = {this.state.today}
+                />
             <div className = "AppointmentContainer">
                 <form className="AppointmentPicker"
                 onSubmit={this.handleSubmit}>
@@ -234,6 +241,7 @@ class TimePicker extends Component {
                         dateFormat="yyyy-MM-dd"
                         minDate= {new Date()}
                         maxDate={addDays(new Date(), 8)}
+                        autoComplete="off"
                     />
                     <DatePicker
                         className = "start-time-picker"
@@ -247,6 +255,7 @@ class TimePicker extends Component {
                         timeFormat="HH:mm"
                         timeIntervals={30}
                         dateFormat="h:mm aa"
+                        autoComplete="off"
                     />
 
                     <DatePicker
@@ -261,6 +270,7 @@ class TimePicker extends Component {
                         timeFormat="HH:mm"
                         timeIntervals={30}
                         dateFormat="h:mm aa"
+                        autoComplete="off"
                     />
 
                     <InputField 
@@ -270,6 +280,7 @@ class TimePicker extends Component {
                         placeholder="Purpose"
                         value = {this.state.purpose}
                         onChange={this.handleChange}
+                        autoComplete="off"
                     />
                     <SubmitButton
                         text='Confirm'
@@ -280,12 +291,15 @@ class TimePicker extends Component {
                     <div
                     className="explanation"
                     type="text"></div>
-                    <AppointmentList
-                        appointmentCards = {this.state.appointments}
-                        onStart={this.startMeeting}
-                        onDelete={this.deleteAppointment}
-                    />
+                    <Paper style={{padding: '10px',height: '100%', width: '100%', overflow: 'auto'}}>
+                        <AppointmentList
+                            appointmentCards = {this.state.appointments}
+                            onStart={this.startMeeting}
+                            onDelete={this.deleteAppointment}
+                        />
+                    </Paper>
                 </div>
+            </div>
             </div>
         );
     }

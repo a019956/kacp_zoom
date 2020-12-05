@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {observer} from 'mobx-react';
 import LogIn from './pages/LogIn'
-import Navbar from './components/Navbar'
+
 import TimePicker from './pages/TimePicker'
 import UserStore from './stores/UserStore'
 import './styles/LogIn.css'
@@ -47,11 +47,9 @@ class App extends Component {
     };
 
     render() {
-        
         if (UserStore.isLoggedIn) {
             return (
                 <div className="time-picker-page">
-                    <Navbar />
                     <TimePicker/>
                 </div>
                 )}

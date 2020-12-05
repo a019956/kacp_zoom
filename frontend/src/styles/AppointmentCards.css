@@ -6,19 +6,25 @@
     margin: 1%;
     border-top: 1px solid;
     border-bottom: 1px solid;
+    display: flex;
+    flex-direction: row;
+    position: relative;
 }
+.agenda {
+    font-size: 16px;
+    font-family: 'Raleway', sans-serif;
 
-.appointment-content-left{
-    align-self: center;
-    font-size: 10px;
+}
+.duration {
+    font-size: 16px;
     font-family: 'Raleway', sans-serif;
 }
 
-.appointment-content-right{
-    align-self: center;
-    font-size: 10px;
+.zoom-username, .join-url, .url{
+    font-size: 12px;
     font-family: 'Raleway', sans-serif;
 }
+
 
 .start-button{
     font-size: 12px;
@@ -33,7 +39,8 @@
     font-size: 12px;
     padding: 3px 3px;
     border: 0;
-    background-color: #162c55;
+    background-color: #551616;
     color: #fff;
     border-radius: 3px;
+
 }

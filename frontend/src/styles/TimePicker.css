@@ -1,5 +1,5 @@
 .AppointmentPicker {
-    width: 40%;
+    width: 30%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -7,7 +7,8 @@
 }
 
 .AppointmentChecker {
-    width: 60%;
+    width: 70%;
+    height: 700px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -32,3 +33,30 @@
     color: #fff;
     border-radius: 3px;
 }
+
+@media (max-width: 800px) {
+    .AppointmentContainer {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-top: 2px solid black;
+    }
+
+    .AppointmentPicker {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .AppointmentChecker {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+  }
