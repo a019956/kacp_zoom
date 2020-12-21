@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import {observer} from 'mobx-react';
-import LogIn from './pages/LogIn'
 import Navbar from './components/Navbar'
+
+import LogIn from './pages/LogIn'
+import LandingPage from './pages/LandingPage'
 import TimePicker from './pages/TimePicker'
+import RoomPicker from './pages/RoomPicker'
 import UserStore from './stores/UserStore'
 import './styles/LogIn.css'
 
@@ -12,11 +15,25 @@ class App extends Component {
         super(props);
         
         this.state = {
-            username: 'username',
-        }
+            username: '',
+            currentPage: '0',
+            navItems: [
+            {
+                page: '0',
+                name: 'Home'
+            },
+            {
+                page: '1',
+                name: 'Zoom'
+            },
+            {
+                page: '2',
+                name: 'Room'
+            }
+            ]
+        } 
+        this.changePage = this.changePage.bind(this)
     };
-
-
     async componentDidMount() {
         try{
             let res = await fetch ('/isLoggedIn', {
@@ -32,6 +49,8 @@ class App extends Component {
             if (result && result.success) {
                 UserStore.loading = false;
                 UserStore.isLoggedIn = true;
+                let username = UserStore.username;
+                this.setState({username})
             }
 
             else {
@@ -46,21 +65,38 @@ class App extends Component {
         }
     };
 
-    render() {
-
-            return (
-                <div className="testing-page">
-                    <div className="time-picker-page">
-                        <Navbar />
-                        <TimePicker/>
-                    </div>
-                
-                    <div className="log-in-page">
-                        <LogIn />
-                    </div>
-                </div>
-            )
-        };
+    changePage(page){
+        const currentPage = page
+        this.setState({currentPage})
     }
 
+    render() {
+        //{(recurrenceType==2)?'Week(s)':'Month(s)'}
+        const {navItems, currentPage} = this.state;
+        if (UserStore.isLoggedIn) {
+            return (
+                <div className="application">
+                    <Navbar 
+                        navItems={navItems}
+                        onPage={this.changePage}
+                    />
+                        {currentPage==0&&
+                        <LandingPage/>
+                        }
+                        {currentPage==1&&
+                        <TimePicker/>
+                        }
+                        {currentPage==2&&
+                        <RoomPicker/>
+                        }
+                </div>
+                )}
+        else {
+            return (
+                <div className="log-in-page">
+                    <LogIn />
+                </div>
+        )};
+    }
+}
 export default observer(App);

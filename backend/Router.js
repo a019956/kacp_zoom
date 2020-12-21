@@ -27,7 +27,7 @@ class Router {
         this.getAppointment(app, db);
         this.deleteAppointment(app, db);
     }
-
+    
     login(app, db) {
         app.post('/login', async (req, res) => {
             const {username, password} = req.body;
@@ -149,16 +149,16 @@ class Router {
     //Time picker routers
     appointment(app, db) {
         app.post('/doAppointment', async (req, res) => {
-            const {username, date, durationArray, duration, purpose, startTime, endTime} = req.body;
-            var {join_url} = ''
-            var {start_url} = ''
-            var {meeting_id} = ''
+            var {username, date, durationArray, duration, purpose, startTime, endTime, 
+                recurrenceOption, recurrenceType, recurrenceWeek, recurrenceDay, 
+                recurrenceInterval, recurrenceTime, dateTime, length, join_url, start_url, meeting_id} = req.body;
+                
+            var recurrenceObject=''
 
             //loop through zoom accounts
             const zoom = await db.query("SELECT ARRAY(SELECT zoom_username FROM zoom_account)");
             const z_username = zoom.rows[0].array
             var i = 0
-            const zoomStartTime = (date+"T"+startTime+"Z")
 
             //loop through array of zoom accounts to check availability of any of them
             for (let z of z_username) {
@@ -182,6 +182,26 @@ class Router {
                 }
                 //when all duration for a zoom account is available, go ahead and make the appointment.
                 if (i === durationArray.length) { 
+                    //set up recurrence options depending on the type of recurring meeting
+                    if(recurrenceType==2){
+                        recurrenceObject={
+                            "type": recurrenceType,
+                            "repeat_interval": recurrenceInterval,
+                            "weekly_days": recurrenceDay,
+                            "end_times": recurrenceTime
+                            }
+                    }
+                    else{
+                        recurrenceObject={
+                            "type": recurrenceType,
+                            "repeat_interval": recurrenceInterval,
+                            "weekly_days": recurrenceDay,
+                            "monthly_week": recurrenceWeek,
+                            "monthly_week_day": recurrenceDay,
+                            "end_times": recurrenceTime
+                        }
+                    }
+
 
                     const email = z
                     //Post request to zoom 
@@ -203,11 +223,12 @@ class Router {
                         },
                         body: {
                             "topic": purpose,
-                            "type": "2",
+                            "type": recurrenceOption,
                             "start_time":date+"T"+startTime+"Z",
                             "duration": duration,
                             "timezone": "America/New_York",
                             "agenda": purpose,
+                            "recurrence": recurrenceObject,
                             },
                         json: true //Parse the JSON string in the res
                     };
@@ -216,15 +237,36 @@ class Router {
                     rp(options)
                     .then(function (response) {
                         //printing the res on the console
+                        console.log(response)
+
                         start_url = response.start_url
                         join_url = response.join_url
                         meeting_id = response.id
-                        
-                        db.query("INSERT INTO appointment(date, duration, zoom_username, username, purpose, start_time, end_time, duration_array, join_url, start_url, id) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)", [date, duration, z, username, purpose, startTime, endTime, durationArray, join_url, start_url, meeting_id]);
+                        //For recurring meetings, 
+                        if (recurrenceOption==8) {
+                            const occurrences = response.occurrences;
+                            length = occurrences.length
+                            //Save all the meetings to the appointments database
+                            for (let occurence of occurrences){
+                                dateTime = occurence.start_time.split('T')
+                                meeting_id = occurence.occurrence_id
+                                date = dateTime[0]
+                                
+                                db.query("INSERT INTO appointment(date, duration, zoom_username, username, purpose, start_time, end_time, duration_array, join_url, start_url, id, recurrence_option) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)", 
+                                [date, duration, z, username, purpose, startTime, endTime, durationArray, join_url, start_url, meeting_id, recurrenceType]);
+                                
+                            }}
+
+                        else {
+                            meeting_id = response.id
+                            db.query("INSERT INTO appointment(date, duration, zoom_username, username, purpose, start_time, end_time, duration_array, join_url, start_url, id) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)", 
+                            [date, duration, z, username, purpose, startTime, endTime, durationArray, join_url, start_url, meeting_id]);
+                        }
                     })
                     .catch(function (err) {
                         // API call failed...
                         console.log('API call failed, reason ', err);
+                        return;
                     });
 
                         res.json({
@@ -247,8 +289,8 @@ class Router {
     deleteAppointment(app, db){
         app.post('/deleteAppointment', async (req, res) => {
             const {id} = req.body;
-
-        var options = {
+            db.query("DELETE FROM appointment WHERE id = $1", [id]);
+            var options = {
             //You can use a different uri if you're making an API call to a different Zoom endpoint.
                 method: "DELETE",
                 uri: "https://api.zoom.us/v2/meetings/"+id,
@@ -270,7 +312,6 @@ class Router {
                 //printing the res on the console
                 console.log(response)
                 
-                db.query("DELETE FROM appointment WHERE id = $1", [id]);
             })
             .catch(function (err) {
                 // API call failed...
@@ -289,10 +330,8 @@ class Router {
             const {username, today} = req.body;
             //delete all appointments that ended
             const delete_array = await db.query("SELECT id FROM appointment WHERE date < $1", [today])
-            var length = delete_array.rows.length
-            console.log(delete_array.rows.length)
-            for (var i=0; i<length; i++) {
-                var id = delete_array.rows[i].id
+            for (let appointment of delete_array.rows) {
+                var id = appointment.id
                 var options = {
                     //You can use a different uri if you're making an API call to a different Zoom endpoint.
                         method: "DELETE",
@@ -321,25 +360,25 @@ class Router {
                     });
         }
             //get all appointments under the username
-            const data = await db.query("SELECT * FROM appointment WHERE username = $1 ORDER BY date ASC, start_time DESC;", [username])
-            length = data.rows.length
+            const A = await db.query("SELECT * FROM appointment WHERE username = $1 ORDER BY date ASC, start_time DESC;", [username])
             var appointments = [];
 
             //add all appointments 
-            for (var i=0; i<length; i++) {
+            for (app of A.rows) {
                 const appointment = {
-                    date: data.rows[i].date,
-                    startTime: data.rows[i].start_time,
-                    endTime: data.rows[i].end_time,
-                    purpose: data.rows[i].purpose,
-                    zoom_username: data.rows[i].zoom_username,
-                    join_url: data.rows[i].join_url,
-                    start_url: data.rows[i].start_url,
-                    meeting_id: data.rows[i].id
+                    date: app.date,
+                    startTime: app.start_time,
+                    endTime: app.end_time,
+                    purpose: app.purpose,
+                    zoom_username: app.zoom_username,
+                    join_url: app.join_url,
+                    start_url: app.start_url,
+                    meeting_id: app.id
                     }
-                appointments.push(appointment)
+                    appointments.push(appointment)
                 }
                 
+                const R = await db.query("SELECT * FROM appointment WHERE username = $1 ORDER BY date ASC, start_time DESC;", [username])
 
             res.json({
                 success: true,

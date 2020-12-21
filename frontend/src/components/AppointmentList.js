@@ -4,9 +4,9 @@ import AppointmentCards from './AppointmentCards';
 class AppointmentList extends Component {
 
     render() {
-        const {onStart, onDelete} = this.props;
+        const {onStart, onDelete, onEmailShare} = this.props;
         const appointmentCards = this.props.appointmentCards.map((r, index) => (
-            <AppointmentCards key = {r.id} {...r} onStart={onStart} onDelete={onDelete} />
+            <AppointmentCards key = {r.id} {...r} onStart={onStart} onDelete={onDelete} onEmailShare={onEmailShare}/>
         ));
         if (appointmentCards === [] ) {
         return (

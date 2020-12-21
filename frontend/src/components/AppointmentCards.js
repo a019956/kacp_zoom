@@ -4,7 +4,8 @@ import '../styles/AppointmentCards.css'
 class AppointmentCards extends Component {
 
     render() {
-        const {date,  purpose, startTime, endTime, zoom_username, join_url, start_url, meeting_id, onStart, onDelete} = this.props;
+        const {date,  purpose, startTime, endTime, zoom_username, join_url, 
+            start_url, meeting_id, onStart, onDelete, onEmailShare, onKakaoTalk} = this.props;
         return (
             <div className="appointment-card">
                 <h3 className="agenda">{purpose}: {date}</h3>
@@ -22,6 +23,12 @@ class AppointmentCards extends Component {
                     onClick = {() => onDelete(meeting_id)}
                     >
                         Delete Meeting
+                    </button>
+                    <button
+                    className="email-button"
+                    onClick = {() => onEmailShare(join_url, startTime, endTime, date, purpose)}
+                    >
+                        Share
                     </button>
                 </div>
         );

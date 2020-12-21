@@ -4,11 +4,12 @@ import '../styles/InputField.css'
 class Inputfield extends Component {
     render() {
         return (
-                <div className='container'>
+                <div className='container' >
                     <label>
                         {this.props.label}
                     </label>
                     <input
+                    className='inputField'
                     className='input'
                     type={this.props.type}
                     placeholder={this.props.placeholder}

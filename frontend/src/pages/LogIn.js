@@ -21,7 +21,6 @@ class LogIn extends Component {
     };
     resetForm() {
         this.setState({
-            username: '',
             password: ''
         })
     }
