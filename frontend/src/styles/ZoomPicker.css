@@ -55,8 +55,15 @@
     transition: all 250ms ease-in-out;
 }
 
-.radio {
-    margin: .4rem;
+.recurrence-options{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.tab-container {
+    display: flex;
+    flex-direction: column;
 }
 
 @media (max-width: 800px) {

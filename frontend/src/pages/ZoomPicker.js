@@ -348,57 +348,62 @@ class ZoomPicker extends Component {
 
                             <h3 className = 'welcome'>Hello, {UserStore.username}</h3>
                             <h4 className = 'today'>Today is: {this.state.today}</h4>
+                            <div className='recurrence-options'>
+                                <li className='tab-container' value={recurrenceOption} onChange={this.handleChange}>
+                                    <ul>
+                                        <input name="recurrenceOption" type="radio" id="tab01" value='2'/>
+                                        <label for="tab01">One-time</label>
+                                    </ul>
+                                    <ul>
+                                        <input name="recurrenceOption" type="radio" id="tab02" value='8'/>
+                                        <label for="tab02">Repeating</label>
+                                    </ul>
+                                </li>
+                                    {(recurrenceOption==8) && <div className='RecurrenceMenu'>
+                                    <SelectMenu
+                                        options={recurrenceTypes}
+                                        onChange={this.handleChange}
+                                        endLabel='meeting'
+                                        name='recurrenceType'
+                                        value={recurrenceType}
+                                    />
 
-                            <div className='tab-container' value={recurrenceOption} onChange={this.handleChange}>
-                                <input name="recurrenceOption" type="radio" id="tab01" value='2'/>
-                                <label for="tab01">One-time</label>
-                                <input name="recurrenceOption" type="radio" id="tab02" value='8'/>
-                                <label for="tab02">Repeating</label>
+
+                                    <SelectMenu
+                                        label='Every'
+                                        endLabel={(recurrenceType==2)?'Week(s)':'Month(s)'}
+                                        options={recurrenceIntervals}
+                                        onChange={this.handleChange}
+                                        name='recurrenceInterval'
+                                        value={recurrenceInterval}
+                                    />
+                                    {(recurrenceType==3) && <SelectMenu
+                                        label='On'
+                                        endLabel='week'
+                                        options={recurrenceWeeks}
+                                        onChange={this.handleChange}
+                                        name='recurrenceWeek'
+                                        value={recurrenceWeek}
+                                    />}
+
+                                    <SelectMenu
+                                        label='On'
+                                        options={recurrenceDays}
+                                        onChange={this.handleChange}
+                                        name='recurrenceDay'
+                                        value={recurrenceDay}
+                                    />
+
+                                    <SelectMenu
+                                        label='Ends after'
+                                        endLabel='meetings'
+                                        options={recurrenceTimes}
+                                        onChange={this.handleChange}
+                                        name='recurrenceTime'
+                                        value={recurrenceTime}
+                                    />
+                                </div>}
                             </div>
-
-                            {(recurrenceOption==8) && <div className='RecurrenceMenu'>
-                                <SelectMenu
-                                    options={recurrenceTypes}
-                                    onChange={this.handleChange}
-                                    endLabel='meeting'
-                                    name='recurrenceType'
-                                    value={recurrenceType}
-                                />
-
-                                <SelectMenu
-                                    label='Every'
-                                    endLabel={(recurrenceType==2)?'Week(s)':'Month(s)'}
-                                    options={recurrenceIntervals}
-                                    onChange={this.handleChange}
-                                    name='recurrenceInterval'
-                                    value={recurrenceInterval}
-                                />
-                                {(recurrenceType==3) && <SelectMenu
-                                    label='On'
-                                    endLabel='week'
-                                    options={recurrenceWeeks}
-                                    onChange={this.handleChange}
-                                    name='recurrenceWeek'
-                                    value={recurrenceWeek}
-                                />}
-
-                                <SelectMenu
-                                    label='On'
-                                    options={recurrenceDays}
-                                    onChange={this.handleChange}
-                                    name='recurrenceDay'
-                                    value={recurrenceDay}
-                                />
-
-                                <SelectMenu
-                                    label='Ends after'
-                                    endLabel='meetings'
-                                    options={recurrenceTimes}
-                                    onChange={this.handleChange}
-                                    name='recurrenceTime'
-                                    value={recurrenceTime}
-                                />
-                            </div>}
 
                             <label>Starting Date</label>
                             <DatePicker
@@ -467,7 +472,7 @@ class ZoomPicker extends Component {
                         <div
                         className="explanation"
                         type="text"></div>
-                        <Paper style={{padding: '10px',height: '100%', width: '50%', overflow: 'auto'}}>
+                        <Paper style={{padding: '10px',height: '100%', width: '100%', overflow: 'auto'}}>
                             <AppointmentList
                                 appointmentCards = {this.state.appointments}
                                 onStart={this.startMeeting}

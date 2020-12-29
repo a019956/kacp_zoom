@@ -8,21 +8,18 @@ class AppointmentCards extends Component {
             start_url, meeting_id, onStart, onDelete, onEmailShare, onKakaoTalk} = this.props;
         return (
             <div className="appointment-card">
-                <h3 className="agenda">{purpose}: {date}</h3>
-                <h3 className="duration">{startTime} - {endTime}</h3>
-                <h3 className="zoom-username">{zoom_username}</h3>
-                <h3 className="join-url">Invite Link: {join_url}</h3>
+                <div className='meeting-info-container'>
+                    <h3 className="agenda">{purpose}: {date}</h3>
+                    <h3 className="duration">{startTime} - {endTime}</h3>
+                    <h3 className="zoom-username">{zoom_username}</h3>
+                    <h3 className="join-url">Invite Link: {join_url}</h3>
+                </div>
+                <div className="button-container">
                     <button
                     className="start-button"
                     onClick = {() => onStart(start_url)}
                     >
-                        Start Meeting
-                    </button>
-                    <button
-                    className="delete-button"
-                    onClick = {() => onDelete(meeting_id)}
-                    >
-                        Delete Meeting
+                        Start
                     </button>
                     <button
                     className="email-button"
@@ -30,7 +27,14 @@ class AppointmentCards extends Component {
                     >
                         Share
                     </button>
+                    <button
+                    className="delete-button"
+                    onClick = {() => onDelete(meeting_id)}
+                    >
+                        Delete
+                    </button>
                 </div>
+            </div>
         );
     }
 }

@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap");
 
+.meeting-info-container{
+    display: flex;
+    flex-direction: column;
+}
+
 .appointment-card {
 	background-color: rgb(255, 255, 255);
 	width: 300px;
@@ -7,7 +12,7 @@
     border-top: 1px solid;
     border-bottom: 1px solid;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     position: relative;
 }
 .agenda {
@@ -25,6 +30,10 @@
     font-family: 'Raleway', sans-serif;
 }
 
+.button-container{
+    display: flex;
+    flex-direction: column;
+}
 
 .start-button{
     font-size: 12px;
