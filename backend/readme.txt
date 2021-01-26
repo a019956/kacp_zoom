@@ -1,4 +1,4 @@
-1. go to the backend/db/index.js file with following content:
+1. create backend/db/index.js file with following content:
 
 const {Pool} = require('pg');
 
@@ -29,3 +29,12 @@ const config = {
 };
 
 module.exports = config[env]
+
+
+3. create backend/.env file with following content:
+
+PGUSER=postgres
+PGHOST=localhost
+PGPASSWORD=(password)
+PGDATABASE=(database name)
+PGPORT=(database port)
