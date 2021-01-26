@@ -9,7 +9,6 @@ class Inputfield extends Component {
                         {this.props.label}
                     </label>
                     <input
-                    className='inputField'
                     className='input'
                     type={this.props.type}
                     placeholder={this.props.placeholder}

@@ -16,25 +16,30 @@ class App extends Component {
         
         this.state = {
             username: '',
-            currentPage: '0',
+            currentPage: '1',
             navItems: [
-            {
-                page: '0',
-                name: 'Home'
-            },
-            {
-                page: '1',
-                name: 'Zoom'
-            },
-            {
-                page: '2',
-                name: 'Room'
-            }
+            //FOR FUTURE USE
+            // {
+            //     page: '0',
+            //     name: 'Home'
+            // },
+            // {
+            //     page: '1',
+            //     name: 'Zoom'
+            // },
+            // {
+            //     page: '2',
+            //     name: 'Room'
+            // }
             ]
         } 
         this.changePage = this.changePage.bind(this)
         this.testLogIn = this.testLogIn.bind(this)
     };
+
+    //  When application loads, check for log-in status.
+    //  If not logged in, return log-in page.
+    //  If logged in, render Zoom application.
     async componentDidMount() {
         try{
             let res = await fetch ('/isLoggedIn', {
@@ -66,6 +71,7 @@ class App extends Component {
         }
     };
 
+    //  Change appliaton by clicking on Navbar. (Currently in development)
     changePage(page){
         const currentPage = page
         this.setState({currentPage})
@@ -77,7 +83,6 @@ class App extends Component {
     }
 
     render() {
-        //{(recurrenceType==2)?'Week(s)':'Month(s)'}
         const {navItems, currentPage} = this.state;
         if (UserStore.isLoggedIn) {
             return (

@@ -19,15 +19,22 @@ class LogIn extends Component {
         this.doLogIn = this.doLogIn.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     };
+
+    //  At change of input, change state.
+    handleChange(e) {
+		this.setState({[e.target.name]: e.target.value});
+    }
+    
+
+    //  FOR LOG-IN
+    //  If there is an error with log-in, reset password to emtpy.
     resetForm() {
         this.setState({
             password: ''
         })
     }
-    handleChange(e) {
-		this.setState({[e.target.name]: e.target.value});
-	}
 
+    //  Check if username or password is empty.
     handleSubmit(e) {
         e.preventDefault();
         if (this.state.username == '') {
@@ -43,11 +50,13 @@ class LogIn extends Component {
             buttonDisabled: true
         })
 
+        //  If they are not empty, send log-in request to router.
         this.doLogIn()
     }
 
+    //  Send log-in request to router.
     async doLogIn() {
-
+        
         try { 
 
             let res = await fetch('/login', {
@@ -62,22 +71,26 @@ class LogIn extends Component {
                 })
             });
 
+            //  If there is a matching username and password in the database, let user log-in to the application.
             let result = await res.json();
             if (result && result.success) {
                 UserStore.username = result.username;
                 UserStore.isLoggedIn = true;
             }
 
+            //  If there is a mismatch, aler user with error message and reset password input.
             else if (result && result.success === false) {
                 this.resetForm();
                 alert(result.msg);
             }
         }
+            //Handle errors
             catch(e) {
                 console.log(e);
                 this.resetForm();
         }
     }
+
 
     render() {
         return (

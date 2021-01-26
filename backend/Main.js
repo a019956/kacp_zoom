@@ -16,9 +16,9 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-// ENV variables
+//  ENV variables
 const port = 3000;
-// Database
+//  Database
 const pool = new Pool({
 })
 

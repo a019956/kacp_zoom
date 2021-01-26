@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import TimeChecker from '../components/TimeChecker'
 import SelectMenu from '../components/SelectMenu'
 import InputField from '../components/InputField'
 import SubmitButton from '../components/SubmitButton'
@@ -102,28 +103,26 @@ class ZoomPicker extends Component {
         this.onCancel = this.onCancel.bind(this);
     };
 
-    //Upon loading of the page, load all appointments 
-    //under the username and display on screen.
+    //  Upon loading of the page, load all appointments 
     componentDidMount() {
         const username = UserStore.username
         this.setState({username});
         this.getAppointment();
     }
 
+    //  Updates states upon change of values.
     handleChange(e) {
 		this.setState({[e.target.name]: e.target.value});
     }
-
-    //updates states upon change of values.
     handleDateChange(date, name) {
         this.setState({[name]: date});
     }
-
     handleTimeChange(value, name) {
         this.setState({[name]: value});
     }
 
-    //function to change time string to 4 digit integer value for calculations
+
+    //  Function to change time string to 6 digit integer value for calculations and JSON formatting
     timeToInt(time) {
         let timeString = ''
         time.split(":").forEach((element) => {
@@ -133,7 +132,7 @@ class ZoomPicker extends Component {
         return timeInt;
     }
 
-    //changes starting time and ending time to duration array.
+    //  Changes starting time and ending time to duration array.
     timesToDuration(startTimeInt, endTimeInt) {
         var durationArray = [];
         while(startTimeInt <= endTimeInt) {
@@ -148,39 +147,22 @@ class ZoomPicker extends Component {
         return durationArray;
     }
     
-    //loads appointments that are under the current username
-    async getAppointment() {
-        const username = UserStore.username;
-        const today = format(new Date(), 'yyyy-MM-dd')
-
-        try{
-    
-            let res = await fetch ('/getAppointment', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/JSON',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: username,
-                    today: today,
-                })
-            });
-
-            let result = await res.json();
-
-            const appointments = result.appointments;
-            this.setState({appointments})
+    //  Submitting meetings to be checked for validity.
+    handleSubmit(e) {
+        e.preventDefault();
+        //  If some field is emtpy, return error.
+        if (
+            this.state.date === '' || 
+            this.state.startTime === '' || 
+            this.state.endTime === '' || 
+            this.state.purpose === ''){
+            alert('Please fill out all fields.')
+            return;
         }
+        this.doAppointment()
+    }
 
-        catch(e) {
-            UserStore.loading = false;
-            UserStore.isLoggedIn = false;
-        }
-
-    };
-
-    //create appointment based on infromation given by the user
+    //  Create appointment based on infromation given by the user
     async doAppointment() {
         const today = format(new Date(), 'yyyy-MM-dd')
         const username = this.state.username;
@@ -198,7 +180,7 @@ class ZoomPicker extends Component {
         var startTimeInt = this.timeToInt(startTime);
         var endTimeInt = this.timeToInt(endTime);
 
-        //if the date passes 12:00 don't allow appointment.
+        //  If the date given by the user is before today or startime is after endtime, return error.
         if (this.state.date < today || startTimeInt > endTimeInt){
             alert('Invalid time.')
             return;
@@ -208,10 +190,9 @@ class ZoomPicker extends Component {
             buttonDisabled: true
         })
 
-        //make duration into duration array with 30 minute increments.
+        //  Make duration into duration array with 30 minute increments to be saved in the database.
         var durationArray = this.timesToDuration(startTimeInt, endTimeInt)
-        //duration in minutes
-
+        //  Duration in minutes
         var duration = (durationArray.length - 1) * 30
         try { 
             let res = await fetch('/doAppointment', {
@@ -220,7 +201,7 @@ class ZoomPicker extends Component {
                     'Accept': 'application/JSON',
                     'Content-Type': 'application/json'
                 },
-
+                //  Send JSON to router to be inserted into database.
                 body: JSON.stringify({
                     username: username,
                     date: date,
@@ -238,42 +219,64 @@ class ZoomPicker extends Component {
                     
                 })
             });
-            
+            //  Meeting is successfully made.
             let result = await res.json();
             if (result && result.success) {
                 alert(result.msg);
             }
-
+            //  If time collides with other meetings, return fail.
             else if (result && result.success === false) {
                 alert(result.msg);
             }
         }
+        //  Handle errors
         catch(e) {
             console.log(e);
         }
         this.getAppointment()
     }
 
-    handleSubmit(e) {
-        e.preventDefault();
-        if (
-            this.state.date === '' || 
-            this.state.startTime === '' || 
-            this.state.endTime === '' || 
-            this.state.purpose === ''){
-            alert('Please fill out all fields.')
-            return;
-        }
-        this.doAppointment()
-    }
+    //  Loads appointments for front-end display that are under the current username
+    async getAppointment() {
+        const username = UserStore.username;
+        const today = format(new Date(), 'yyyy-MM-dd')
 
+        try{
+            let res = await fetch ('/getAppointment', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/JSON',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    today: today,
+                })
+            });
+
+            let result = await res.json();
+            //  Get appointments made by the user from the database, and set react state with retrieved data.
+            const appointments = result.appointments;
+            this.setState({appointments})
+        }
+        //  Handle errors
+        catch(e) {
+            UserStore.loading = false;
+            UserStore.isLoggedIn = false;
+        }
+
+    };
+
+    //  When start button is pressed, open Zoom meeting start url retrieved from Zoom API.
     startMeeting(start_url) {
         window.open(start_url)
     }
 
+    //  Delete meeting from the database and make DELETE request to Zoom API.
     async deleteAppointment(meeting_id) {
         const id = meeting_id
-
+        
+        //  Send meeting ID retrieved from Zoom API to router.
         try { 
             let res = await fetch('/deleteAppointment', {
                 method: 'post',
@@ -287,20 +290,26 @@ class ZoomPicker extends Component {
             });
             
             let result = await res.json();
+            //  If successful, alert with success message.
             if (result && result.success) {
                 alert(result.msg);
             }
-
+            //  If there is an error, alert with error message.
             else if (result && result.success === false) {
                 alert(result.msg);
             }
         }
+        //  Handle errors.
         catch(e) {
             console.log(e);
         }
         this.getAppointment()
     }
 
+
+
+    //  SENDING EMAILS
+    //  When share button is pressed, set shared meeting information as state to be displayed on front end & to be sent as e-mail.
     onEmailShare(join_url, startTime, endTime, date, purpose){
         const share_join_url = join_url;
         const share_start_time = startTime;
@@ -310,10 +319,12 @@ class ZoomPicker extends Component {
         this.setState({share_join_url, share_start_time, share_end_time, share_date, share_purpose})
     }
 
+    //  When cancel button is pressed, clear shared meeting information from state. 
     onCancel(){
         this.setState({share_join_url: '', share_start_time: '', share_end_time: '', share_date: '', share_purpose: ''})
     }
 
+    //  On submission,
     sendEmail(e) {
         e.preventDefault();
 
@@ -328,11 +339,7 @@ class ZoomPicker extends Component {
             });
     }
 
-    onCancel() {
-        this.setState({share_join_url: '', share_start_time:'', share_end_time:'', share_date:'', share_purpose:''})
-    }
-
-    //when page loads, get appointments under the username.
+    //RENDER METHOD
     render() {
         const { date, startTime, endTime, purpose, recurrenceTypes, recurrenceType, 
             recurrenceOptions, recurrenceOption, recurrenceWeeks, recurrenceWeek,  recurrenceDays, recurrenceDay, recurrenceIntervals, recurrenceInterval,
@@ -347,6 +354,7 @@ class ZoomPicker extends Component {
                         onSubmit={this.handleSubmit}>
 
                             <h3 className = 'welcome'>Hello, {UserStore.username}</h3>
+                            <DateChecker/>
                             <h4 className = 'today'>Today is: {this.state.today}</h4>
                             <div className='recurrence-options'>
                                 <li className='tab-container' value={recurrenceOption} onChange={this.handleChange}>

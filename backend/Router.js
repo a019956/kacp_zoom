@@ -1,11 +1,11 @@
 require('dotenv').config()
 
-//required modules for zoom API
+//  Required modules for zoom API.
 const jwt = require('jsonwebtoken');
 const config = require('./config');
 const rp = require('request-promise');
 
-//required modules for 
+//  Required modules for password encryption.
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 const session       = require('express-session');
@@ -28,35 +28,16 @@ class Router {
         this.deleteAppointment(app, db);
     }
     
+
+    //  REQUESTS FOR LOGIN PAGE
+    //  Upon user log-in request, look for matching username & password in the database.
     login(app, db) {
         app.post('/login', async (req, res) => {
             const {username, password} = req.body;
-            
-            if (username.length > 12 && password.length > 12){
-                res.json({
-                    success: false,
-                    msg: 'username and password does not exist'
-                })
-                return;
-            }
-            
-            if (username.length > 12) {
-                res.json({
-                    success: false,
-                    msg: 'username does not exist'
-                })
-                return;
-            }
-
-            if (password.length > 12) {
-                res.json({
-                    success: false,
-                    msg: 'password does not exist'
-                })
-                return;
-            }
-
+            //  Change "login" to name of the table to match database.
             const user = await db.query("SELECT * FROM login WHERE username = $1", [username]);
+                
+                //  If there is a match in username, compare the encrypted input password with the encrypted password from the database.
                 if (user.rows.length === 1) {
                     bcrypt.hash(user.rows[0].password, 10, function(err, hash){
                         if (err) {}
@@ -64,6 +45,7 @@ class Router {
                         bcrypt.compare(password, hash, function(err, verified) {
                             if (err) {}
 
+                            //  If given password for the username matches the password from the database, log-in user.
                             if (verified) {
                                 // req.session.userID = user.id;
 
@@ -75,6 +57,7 @@ class Router {
                                 return;
                             }
 
+                            //  If passwords do not match, return error msg.
                             else{
                                 res.json({
                                     success: false,
@@ -84,6 +67,7 @@ class Router {
                         })
                     })
                 }
+                //  If there is no such username in databse, return error msg.
                 else {
                     res.json({
                         success: false,
@@ -93,7 +77,7 @@ class Router {
             
     });
 }
-
+    //  Upon user log-out, remove data.
     logout(app, db) {
 
         app.post('/logout', (req, res) => {
@@ -114,9 +98,10 @@ class Router {
                 return false;
             }
         })
-
     }
 
+    //  Check if user is logged-in upon loading application.
+    //  If user is logged in, load the application.
     isLoggedIn(app, db) {
 
         app.post('/isLoggedIn', (req, res) => {
@@ -146,7 +131,10 @@ class Router {
 
     }
 
-    //Time picker routers
+
+    //  ROUTES FOR TIME PICKER APPLICATION
+    //  When user submits appointment, check for account availabile to use at the given time.
+    //  If there is an account available at the given time, 
     appointment(app, db) {
         app.post('/doAppointment', async (req, res) => {
             var {username, date, durationArray, duration, purpose, startTime, endTime, 
@@ -175,14 +163,16 @@ class Router {
                             continue;
                         }
                     }
-                //if time collides with other time with the account, check the next account.
+                //  If time collides with other time with the account, check the next account.
                     else {
                         break;
                     }
                 }
-                //when all duration for a zoom account is available, go ahead and make the appointment.
+                //  When all duration for a zoom account is available, go ahead and make the appointment.
                 if (i === durationArray.length) { 
-                    //set up recurrence options depending on the type of recurring meeting
+
+                    //  If user requests for a recurring meeting, set JSON to reflect recurrence options.
+                    //  Set up recurrence options depending on the type of recurring meeting
                     if(recurrenceType==2){
                         recurrenceObject={
                             "type": recurrenceType,
@@ -191,6 +181,7 @@ class Router {
                             "end_times": recurrenceTime
                             }
                     }
+
                     else{
                         recurrenceObject={
                             "type": recurrenceType,
@@ -204,11 +195,12 @@ class Router {
 
 
                     const email = z
-                    //Post request to zoom 
-                    //Use req-promise module's .then() method to make req calls.
-                    //Store the options for Zoom API which will be used to make an API call later.
+                    //  Post request to zoom 
+                    //  Use req-promise module's .then() method to make req calls.
+                    //  Store the options for Zoom API which will be used to make an API call later.
+
                     var options = {
-                    //You can use a different uri if you're making an API call to a different Zoom endpoint.
+                    //  You can use a different uri if you're making an API call to a different Zoom endpoint.
                         method: "POST",
                         uri: "https://api.zoom.us/v2/users/"+email+"/meetings",
                         qs: {
@@ -233,20 +225,20 @@ class Router {
                         json: true //Parse the JSON string in the res
                     };
                     
-                    //Use req-promise module's .then() method to make req calls.
+                    //  Use req-promise module's .then() method to make req calls.
                     rp(options)
                     .then(function (response) {
-                        //printing the res on the console
+                        //  Printing the res on the console
                         console.log(response)
 
                         start_url = response.start_url
                         join_url = response.join_url
                         meeting_id = response.id
-                        //For recurring meetings, 
+                        //  For recurring meetings, 
                         if (recurrenceOption==8) {
                             const occurrences = response.occurrences;
                             length = occurrences.length
-                            //Save all the meetings to the appointments database
+                            //  Save all the recurring meetings to the appointments database
                             for (let occurence of occurrences){
                                 dateTime = occurence.start_time.split('T')
                                 meeting_id = occurence.occurrence_id
@@ -256,7 +248,7 @@ class Router {
                                 [date, duration, z, username, purpose, startTime, endTime, durationArray, join_url, start_url, meeting_id, recurrenceType]);
                                 
                             }}
-
+                            //  For one-time meetings, save one meeting to database.
                         else {
                             meeting_id = response.id
                             db.query("INSERT INTO appointment(date, duration, zoom_username, username, purpose, start_time, end_time, duration_array, join_url, start_url, id) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)", 
@@ -277,7 +269,7 @@ class Router {
                     }
                 }
 
-                //if no zoom account is available for the given time duration, send in error.
+                //  If no zoom account is available for the given time duration, send in error.
                 res.json({
                     success: false,
                     msg: "Time is taken, please choose a different time."
@@ -285,13 +277,13 @@ class Router {
             }
         )}
 
-    //Delete meeting
+    //  Delete Zoom meeting from the database and make delete request with Zoom API.
     deleteAppointment(app, db){
         app.post('/deleteAppointment', async (req, res) => {
             const {id} = req.body;
             db.query("DELETE FROM appointment WHERE id = $1", [id]);
             var options = {
-            //You can use a different uri if you're making an API call to a different Zoom endpoint.
+            //  You can use a different uri if you're making an API call to a different Zoom endpoint.
                 method: "DELETE",
                 uri: "https://api.zoom.us/v2/meetings/"+id,
                 qs: {
@@ -304,12 +296,12 @@ class Router {
                     'User-Agent': 'Zoom-api-Jwt-Request',
                     'content-type': 'application/json'
                 },
-                json: true //Parse the JSON string in the res
+                json: true //   Parse the JSON string in the res
             };
-            //Use req-promise module's .then() method to make req calls.
+            //  Use req-promise module's .then() method to make req calls.
             rp(options)
             .then(function (response) {
-                //printing the res on the console
+                //  Printing the res on the console
                 console.log(response)
                 
             })
@@ -324,16 +316,17 @@ class Router {
         });
     }
 
-    //When user loads their appointment, delete all completed get and return appointments to be displayed for user
+    //  Get all appointments under the user to be displayed on the front-end.
     getAppointment(app, db){
         app.post('/getAppointment', async (req, res) => {
             const {username, today} = req.body;
-            //delete all appointments that ended
+            //  When user loads their appointment, delete all completed get and return appointments to be displayed for user
             const delete_array = await db.query("SELECT id FROM appointment WHERE date < $1", [today])
             for (let appointment of delete_array.rows) {
                 var id = appointment.id
                 var options = {
-                    //You can use a different uri if you're making an API call to a different Zoom endpoint.
+                    //  Make delete request to Zoom API.
+                    //  You can use a different uri if you're making an API call to a different Zoom endpoint.
                         method: "DELETE",
                         uri: "https://api.zoom.us/v2/meetings/"+id,
                         qs: {
@@ -346,12 +339,12 @@ class Router {
                             'User-Agent': 'Zoom-api-Jwt-Request',
                             'content-type': 'application/json'
                         },
-                        json: true //Parse the JSON string in the res
+                        json: true //   Parse the JSON string in the res
                     };
                     db.query("DELETE FROM appointment WHERE id = $1", [id]);
                     rp(options)
                     .then(function (response) {
-                        //printing the res on the console
+                        //  Printing the response on the console
                         console.log(response)
                     })
                     .catch(function (err) {
@@ -359,11 +352,12 @@ class Router {
                         console.log('API call failed, reason ', err);
                     });
         }
-            //get all appointments under the username
+            //  
+            //  Get all appointments under the username
             const A = await db.query("SELECT * FROM appointment WHERE username = $1 ORDER BY date ASC, start_time DESC;", [username])
             var appointments = [];
 
-            //add all appointments 
+            //  Add all appointment to the appointments array to be sent to the front-end.
             for (app of A.rows) {
                 const appointment = {
                     date: app.date,
@@ -377,8 +371,7 @@ class Router {
                     }
                     appointments.push(appointment)
                 }
-                
-                const R = await db.query("SELECT * FROM appointment WHERE username = $1 ORDER BY date ASC, start_time DESC;", [username])
+                // const R = await db.query("SELECT * FROM appointment WHERE username = $1 ORDER BY date ASC, start_time DESC;", [username])
 
             res.json({
                 success: true,

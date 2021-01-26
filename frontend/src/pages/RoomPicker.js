@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+//  FOR FUTURE USE
 
 class RoomPicker extends Component {
     constructor(props) {

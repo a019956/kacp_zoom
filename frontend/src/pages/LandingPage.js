@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+//  FOR FUTURE USE
 
 class LandingPage extends Component {
     constructor(props) {
