@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import InputFieldField from './InputFieldfield'
+import InputField from './InputField'
 import '../styles/EmailShare.css';
 
 class EmailShare extends Component {

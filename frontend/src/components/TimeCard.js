@@ -16,3 +16,5 @@ class TimeCard extends Component{
         )
     }
 }
+
+export default TimeCard

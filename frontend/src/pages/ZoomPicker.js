@@ -354,7 +354,7 @@ class ZoomPicker extends Component {
                         onSubmit={this.handleSubmit}>
 
                             <h3 className = 'welcome'>Hello, {UserStore.username}</h3>
-                            <DateChecker/>
+                            {/* <DateChecker/> */}
                             <h4 className = 'today'>Today is: {this.state.today}</h4>
                             <div className='recurrence-options'>
                                 <li className='tab-container' value={recurrenceOption} onChange={this.handleChange}>

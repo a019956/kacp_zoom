@@ -6,7 +6,7 @@ class TimeDisplay extends Component{
         super(props)
     }
     render () {
-        const {date, timeCards, onClick} = this.props;
+        const {date, onClick} = this.props;
         const timeCards = this.props.timeCards.map((r) => (
             <TimeCard {...r} onClick={onClick}/>
         ))
