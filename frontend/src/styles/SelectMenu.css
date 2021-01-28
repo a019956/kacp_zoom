@@ -1,0 +1,13 @@
+.SelectOptions {
+    margin-top: 6px;
+    min-width: 18em;
+    height: 30px;
+    padding: 0px 10px;
+    font-size: 16px;
+    font-family: 'Raleway', sans-serif;
+    background-color: #f3f3f3;
+    border: 0;
+    border-radius: 4px;
+    margin-bottom: 31px;
+    transition: all 250ms ease-in-out;
+}

@@ -1,0 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap");
+
+.navbar-item{
+    font-family: 'Raleway', sans-serif;
+    display: flex;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.8;
+    padding: 0 15px;
+}
+
+.navbar-item:hover {
+    opacity: 1;
+}

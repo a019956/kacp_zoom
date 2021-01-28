@@ -1,0 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap");
+
+.meeting-info-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.appointment-card {
+	background-color: rgb(255, 255, 255);
+	width: 300px;
+    margin: 1%;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+.agenda {
+    font-size: 16px;
+    font-family: 'Raleway', sans-serif;
+
+}
+.duration {
+    font-size: 16px;
+    font-family: 'Raleway', sans-serif;
+}
+
+.zoom-username, .join-url, .url{
+    font-size: 12px;
+    font-family: 'Raleway', sans-serif;
+}
+
+.button-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.start-button{
+    font-size: 12px;
+    padding: 3px 3px;
+    border: 0;
+    background-color: #3968be;
+    color: #fff;
+    border-radius: 3px;
+}
+
+.delete-button{
+    font-size: 12px;
+    padding: 3px 3px;
+    border: 0;
+    background-color: #551616;
+    color: #fff;
+    border-radius: 3px;
+
+}
