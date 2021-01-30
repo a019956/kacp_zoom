@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import {observer} from 'mobx-react';
 import Navbar from './components/Navbar'
+import { addDays , format } from 'date-fns';
 
 import LogIn from './pages/LogIn'
 import LandingPage from './pages/LandingPage'
 import ZoomPicker from './pages/ZoomPicker'
 import RoomPicker from './pages/RoomPicker'
 import UserStore from './stores/UserStore'
-import './styles/LogIn.css'
-
+import FrontEndTest from './pages/frontendtest'
 class App extends Component {
 
     constructor(props) {
@@ -16,17 +16,19 @@ class App extends Component {
         
         this.state = {
             username: '',
-            currentPage: '1',
+            today: format(new Date(), 'yyyy-MM-dd'),
+            currentPage: '0',
             navItems: [
+            
+            {
+                page: '0',
+                name: 'Zoom'
+            },
+            {
+                page: '1',
+                name: 'Email'
+            },
             //FOR FUTURE USE
-            // {
-            //     page: '0',
-            //     name: 'Home'
-            // },
-            // {
-            //     page: '1',
-            //     name: 'Zoom'
-            // },
             // {
             //     page: '2',
             //     name: 'Room'
@@ -36,6 +38,7 @@ class App extends Component {
         this.changePage = this.changePage.bind(this)
         this.testLogIn = this.testLogIn.bind(this)
     };
+
 
     //  When application loads, check for log-in status.
     //  If not logged in, return log-in page.
@@ -71,6 +74,7 @@ class App extends Component {
         }
     };
 
+
     //  Change appliaton by clicking on Navbar. (Currently in development)
     changePage(page){
         const currentPage = page
@@ -83,19 +87,21 @@ class App extends Component {
     }
 
     render() {
-        const {navItems, currentPage} = this.state;
+        const {today, navItems, currentPage} = this.state;
         if (UserStore.isLoggedIn) {
             return (
                 <div className="application">
                     <Navbar 
+                        today={today}
                         navItems={navItems}
                         onPage={this.changePage}
                     />
+                        {/* <FrontEndTest/> */}
                         {currentPage==0&&
-                        <LandingPage/>
+                        <ZoomPicker/>
                         }
                         {currentPage==1&&
-                        <ZoomPicker/>
+                        <LandingPage/>
                         }
                         {currentPage==2&&
                         <RoomPicker/>
@@ -106,7 +112,6 @@ class App extends Component {
             return (
                 <div className="log-in-page">
                     <LogIn />
-                    <button onClick={this.testLogIn}>Test Login</button>
                 </div>
         )};
     }

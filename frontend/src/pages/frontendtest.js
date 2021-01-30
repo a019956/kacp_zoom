@@ -13,7 +13,7 @@ import UserStore from '../stores/UserStore'
 import '../styles/ZoomPicker.css';
 import { Paper } from '@material-ui/core';
 
-class ZoomPicker extends Component {
+class FrontEndTest extends Component {
     constructor(props) {
         super(props);
         
@@ -25,7 +25,106 @@ class ZoomPicker extends Component {
             endTime: '',
             purpose: '',
             buttonDisabled: false,
-            appointments: [],
+            appointments: [{date:
+                "2021-01-29",
+                endTime:"00:30:00",
+                join_url:"https://zoom.us/j/92192687861",
+                meeting_id:"92192687861",
+                purpose:"TEST",
+                startTime:"00:00:00",
+                start_url:"https://zoom.us/s/92192687861?zak=eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiJhRk1QWnpNWVJsU25zclNDeGZOMW93IiwiaXNzIjoid2ViIiwic3R5IjoxLCJ3Y2QiOiJhdzEiLCJjbHQiOjAsInN0ayI6IkVYZkpTWTdxOFQyQ3ZoMHVIdXB6OUVEVjIzenNYd2xSUkx2ZkFrUzJnc28uQUcuNXNTeGd3OHpoR3BNY0JOLUNrVTJmcnZKMEN3dTIyaE5FeWpva2F6bms3eDlBTDJKQmo2VklabDJRZERIdHZ6aUx2cjlpeklVVEowSkdqNC5Qa1gxeDZtWl80N3o3QmdDbDFpS2F3LnRKQlBQbVhkSEtuZUFPdnEiLCJleHAiOjE2MTE3MzI4MDMsImlhdCI6MTYxMTcyNTYwMywiYWlkIjoiY...",
+                zoom_username:"zoom10@kacp.org"
+                },
+            {date:
+                "2021-01-29",
+                endTime:"00:30:00",
+                join_url:"https://zoom.us/j/92192687861",
+                meeting_id:"92192687861",
+                purpose:"TEST",
+                startTime:"00:00:00",
+                start_url:"https://zoom.us/s/92192687861?zak=eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiJhRk1QWnpNWVJsU25zclNDeGZOMW93IiwiaXNzIjoid2ViIiwic3R5IjoxLCJ3Y2QiOiJhdzEiLCJjbHQiOjAsInN0ayI6IkVYZkpTWTdxOFQyQ3ZoMHVIdXB6OUVEVjIzenNYd2xSUkx2ZkFrUzJnc28uQUcuNXNTeGd3OHpoR3BNY0JOLUNrVTJmcnZKMEN3dTIyaE5FeWpva2F6bms3eDlBTDJKQmo2VklabDJRZERIdHZ6aUx2cjlpeklVVEowSkdqNC5Qa1gxeDZtWl80N3o3QmdDbDFpS2F3LnRKQlBQbVhkSEtuZUFPdnEiLCJleHAiOjE2MTE3MzI4MDMsImlhdCI6MTYxMTcyNTYwMywiYWlkIjoiY...",
+                zoom_username:"zoom10@kacp.org"
+                },{date:
+                    "2021-01-29",
+                    endTime:"00:30:00",
+                    join_url:"https://zoom.us/j/92192687861",
+                    meeting_id:"92192687861",
+                    purpose:"TEST",
+                    startTime:"00:00:00",
+                    start_url:"https://zoom.us/s/92192687861?zak=eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiJhRk1QWnpNWVJsU25zclNDeGZOMW93IiwiaXNzIjoid2ViIiwic3R5IjoxLCJ3Y2QiOiJhdzEiLCJjbHQiOjAsInN0ayI6IkVYZkpTWTdxOFQyQ3ZoMHVIdXB6OUVEVjIzenNYd2xSUkx2ZkFrUzJnc28uQUcuNXNTeGd3OHpoR3BNY0JOLUNrVTJmcnZKMEN3dTIyaE5FeWpva2F6bms3eDlBTDJKQmo2VklabDJRZERIdHZ6aUx2cjlpeklVVEowSkdqNC5Qa1gxeDZtWl80N3o3QmdDbDFpS2F3LnRKQlBQbVhkSEtuZUFPdnEiLCJleHAiOjE2MTE3MzI4MDMsImlhdCI6MTYxMTcyNTYwMywiYWlkIjoiY...",
+                    zoom_username:"zoom10@kacp.org"
+                    },
+                    {date:
+                        "2021-01-29",
+                        endTime:"00:30:00",
+                        join_url:"https://zoom.us/j/92192687861",
+                        meeting_id:"92192687861",
+                        purpose:"TEST",
+                        startTime:"00:00:00",
+                        start_url:"https://zoom.us/s/92192687861?zak=eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiJhRk1QWnpNWVJsU25zclNDeGZOMW93IiwiaXNzIjoid2ViIiwic3R5IjoxLCJ3Y2QiOiJhdzEiLCJjbHQiOjAsInN0ayI6IkVYZkpTWTdxOFQyQ3ZoMHVIdXB6OUVEVjIzenNYd2xSUkx2ZkFrUzJnc28uQUcuNXNTeGd3OHpoR3BNY0JOLUNrVTJmcnZKMEN3dTIyaE5FeWpva2F6bms3eDlBTDJKQmo2VklabDJRZERIdHZ6aUx2cjlpeklVVEowSkdqNC5Qa1gxeDZtWl80N3o3QmdDbDFpS2F3LnRKQlBQbVhkSEtuZUFPdnEiLCJleHAiOjE2MTE3MzI4MDMsImlhdCI6MTYxMTcyNTYwMywiYWlkIjoiY...",
+                        zoom_username:"zoom10@kacp.org"
+                        },
+                        {date:
+                            "2021-01-29",
+                            endTime:"00:30:00",
+                            join_url:"https://zoom.us/j/92192687861",
+                            meeting_id:"92192687861",
+                            purpose:"TEST",
+                            startTime:"00:00:00",
+                            start_url:"https://zoom.us/s/92192687861?zak=eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiJhRk1QWnpNWVJsU25zclNDeGZOMW93IiwiaXNzIjoid2ViIiwic3R5IjoxLCJ3Y2QiOiJhdzEiLCJjbHQiOjAsInN0ayI6IkVYZkpTWTdxOFQyQ3ZoMHVIdXB6OUVEVjIzenNYd2xSUkx2ZkFrUzJnc28uQUcuNXNTeGd3OHpoR3BNY0JOLUNrVTJmcnZKMEN3dTIyaE5FeWpva2F6bms3eDlBTDJKQmo2VklabDJRZERIdHZ6aUx2cjlpeklVVEowSkdqNC5Qa1gxeDZtWl80N3o3QmdDbDFpS2F3LnRKQlBQbVhkSEtuZUFPdnEiLCJleHAiOjE2MTE3MzI4MDMsImlhdCI6MTYxMTcyNTYwMywiYWlkIjoiY...",
+                            zoom_username:"zoom10@kacp.org"
+                            },
+                            {date:
+                                "2021-01-29",
+                                endTime:"00:30:00",
+                                join_url:"https://zoom.us/j/92192687861",
+                                meeting_id:"92192687861",
+                                purpose:"TEST",
+                                startTime:"00:00:00",
+                                start_url:"https://zoom.us/s/92192687861?zak=eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiJhRk1QWnpNWVJsU25zclNDeGZOMW93IiwiaXNzIjoid2ViIiwic3R5IjoxLCJ3Y2QiOiJhdzEiLCJjbHQiOjAsInN0ayI6IkVYZkpTWTdxOFQyQ3ZoMHVIdXB6OUVEVjIzenNYd2xSUkx2ZkFrUzJnc28uQUcuNXNTeGd3OHpoR3BNY0JOLUNrVTJmcnZKMEN3dTIyaE5FeWpva2F6bms3eDlBTDJKQmo2VklabDJRZERIdHZ6aUx2cjlpeklVVEowSkdqNC5Qa1gxeDZtWl80N3o3QmdDbDFpS2F3LnRKQlBQbVhkSEtuZUFPdnEiLCJleHAiOjE2MTE3MzI4MDMsImlhdCI6MTYxMTcyNTYwMywiYWlkIjoiY...",
+                                zoom_username:"zoom10@kacp.org"
+                                },
+                                {date:
+                                    "2021-01-29",
+                                    endTime:"00:30:00",
+                                    join_url:"https://zoom.us/j/92192687861",
+                                    meeting_id:"92192687861",
+                                    purpose:"TEST",
+                                    startTime:"00:00:00",
+                                    start_url:"https://zoom.us/s/92192687861?zak=eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiJhRk1QWnpNWVJsU25zclNDeGZOMW93IiwiaXNzIjoid2ViIiwic3R5IjoxLCJ3Y2QiOiJhdzEiLCJjbHQiOjAsInN0ayI6IkVYZkpTWTdxOFQyQ3ZoMHVIdXB6OUVEVjIzenNYd2xSUkx2ZkFrUzJnc28uQUcuNXNTeGd3OHpoR3BNY0JOLUNrVTJmcnZKMEN3dTIyaE5FeWpva2F6bms3eDlBTDJKQmo2VklabDJRZERIdHZ6aUx2cjlpeklVVEowSkdqNC5Qa1gxeDZtWl80N3o3QmdDbDFpS2F3LnRKQlBQbVhkSEtuZUFPdnEiLCJleHAiOjE2MTE3MzI4MDMsImlhdCI6MTYxMTcyNTYwMywiYWlkIjoiY...",
+                                    zoom_username:"zoom10@kacp.org"
+                                    },
+                                    {date:
+                                        "2021-01-29",
+                                        endTime:"00:30:00",
+                                        join_url:"https://zoom.us/j/92192687861",
+                                        meeting_id:"92192687861",
+                                        purpose:"TEST",
+                                        startTime:"00:00:00",
+                                        start_url:"https://zoom.us/s/92192687861?zak=eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiJhRk1QWnpNWVJsU25zclNDeGZOMW93IiwiaXNzIjoid2ViIiwic3R5IjoxLCJ3Y2QiOiJhdzEiLCJjbHQiOjAsInN0ayI6IkVYZkpTWTdxOFQyQ3ZoMHVIdXB6OUVEVjIzenNYd2xSUkx2ZkFrUzJnc28uQUcuNXNTeGd3OHpoR3BNY0JOLUNrVTJmcnZKMEN3dTIyaE5FeWpva2F6bms3eDlBTDJKQmo2VklabDJRZERIdHZ6aUx2cjlpeklVVEowSkdqNC5Qa1gxeDZtWl80N3o3QmdDbDFpS2F3LnRKQlBQbVhkSEtuZUFPdnEiLCJleHAiOjE2MTE3MzI4MDMsImlhdCI6MTYxMTcyNTYwMywiYWlkIjoiY...",
+                                        zoom_username:"zoom10@kacp.org"
+                                        },
+                                        {date:
+                                            "2021-01-29",
+                                            endTime:"00:30:00",
+                                            join_url:"https://zoom.us/j/92192687861",
+                                            meeting_id:"92192687861",
+                                            purpose:"TEST",
+                                            startTime:"00:00:00",
+                                            start_url:"https://zoom.us/s/92192687861?zak=eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiJhRk1QWnpNWVJsU25zclNDeGZOMW93IiwiaXNzIjoid2ViIiwic3R5IjoxLCJ3Y2QiOiJhdzEiLCJjbHQiOjAsInN0ayI6IkVYZkpTWTdxOFQyQ3ZoMHVIdXB6OUVEVjIzenNYd2xSUkx2ZkFrUzJnc28uQUcuNXNTeGd3OHpoR3BNY0JOLUNrVTJmcnZKMEN3dTIyaE5FeWpva2F6bms3eDlBTDJKQmo2VklabDJRZERIdHZ6aUx2cjlpeklVVEowSkdqNC5Qa1gxeDZtWl80N3o3QmdDbDFpS2F3LnRKQlBQbVhkSEtuZUFPdnEiLCJleHAiOjE2MTE3MzI4MDMsImlhdCI6MTYxMTcyNTYwMywiYWlkIjoiY...",
+                                            zoom_username:"zoom10@kacp.org"
+                                            },
+                                            {date:
+                                                "2021-01-29",
+                                                endTime:"00:30:00",
+                                                join_url:"https://zoom.us/j/92192687861",
+                                                meeting_id:"92192687861",
+                                                purpose:"TEST",
+                                                startTime:"00:00:00",
+                                                start_url:"https://zoom.us/s/92192687861?zak=eyJ6bV9za20iOiJ6bV9vMm0iLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGllbnQiLCJ1aWQiOiJhRk1QWnpNWVJsU25zclNDeGZOMW93IiwiaXNzIjoid2ViIiwic3R5IjoxLCJ3Y2QiOiJhdzEiLCJjbHQiOjAsInN0ayI6IkVYZkpTWTdxOFQyQ3ZoMHVIdXB6OUVEVjIzenNYd2xSUkx2ZkFrUzJnc28uQUcuNXNTeGd3OHpoR3BNY0JOLUNrVTJmcnZKMEN3dTIyaE5FeWpva2F6bms3eDlBTDJKQmo2VklabDJRZERIdHZ6aUx2cjlpeklVVEowSkdqNC5Qa1gxeDZtWl80N3o3QmdDbDFpS2F3LnRKQlBQbVhkSEtuZUFPdnEiLCJleHAiOjE2MTE3MzI4MDMsImlhdCI6MTYxMTcyNTYwMywiYWlkIjoiY...",
+                                                zoom_username:"zoom10@kacp.org"
+                                                },
+                                        ],
             reucurringMeetings: [],
             //Select menus for recurring meetings
             recurrence: false,
@@ -33,7 +132,7 @@ class ZoomPicker extends Component {
                 {name: 'One-time', value: '2'},
                 {name: 'Repeating', value: '8'}
             ],
-            recurrenceOption: '',
+            recurrenceOption: '8',
             recurrenceTypes: [
                 {name: 'Weekly', value: '2',},
                 {name: 'Monthly', value: '3',}
@@ -90,254 +189,10 @@ class ZoomPicker extends Component {
             share_date: '',
             share_purpose: '', 
         }
-        this.handleChange = this.handleChange.bind(this);
-        this.handleDateChange = this.handleDateChange.bind(this);
-        this.handleTimeChange = this.handleTimeChange.bind(this);
-        this.doAppointment = this.doAppointment.bind(this);
-        this.deleteAppointment = this.deleteAppointment.bind(this);
-        this.onEmailShare = this.onEmailShare.bind(this);
-        this.sendEmail = this.sendEmail.bind(this);
-        this.timeToInt = this.timeToInt.bind(this);
-        this.timesToDuration = this.timesToDuration.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.onCancel = this.onCancel.bind(this);
-    };
-
-    //  Upon loading of the page, load all appointments 
-    componentDidMount() {
-        const username = UserStore.username
-        this.setState({username});
-        this.getAppointment();
-    }
-
-    //  Updates states upon change of values.
-    handleChange(e) {
-		this.setState({[e.target.name]: e.target.value});
-    }
-    handleDateChange(date, name) {
-        this.setState({[name]: date});
-    }
-    handleTimeChange(value, name) {
-        this.setState({[name]: value});
-    }
-
-
-    //  Function to change time string to 6 digit integer value for calculations and JSON formatting
-    timeToInt(time) {
-        let timeString = ''
-        time.split(":").forEach((element) => {
-            timeString += element;
-        });
-        var timeInt = parseInt(timeString)
-        return timeInt;
-    }
-
-    //  Changes starting time and ending time to duration array.
-    timesToDuration(startTimeInt, endTimeInt) {
-        var durationArray = [];
-        while(startTimeInt <= endTimeInt) {
-            durationArray.push(startTimeInt);
-            if (startTimeInt%10000 === 0) {
-                startTimeInt += 3000
-            }
-            else {
-                startTimeInt += 7000
-            }
-        }
-        return durationArray;
-    }
-    
-    //  Submitting meetings to be checked for validity.
-    handleSubmit(e) {
-        e.preventDefault();
-        //  If some field is emtpy, return error.
-        if (
-            this.state.date === '' || 
-            this.state.startTime === '' || 
-            this.state.endTime === '' || 
-            this.state.purpose === ''){
-            alert('Please fill out all fields.')
-            return;
-        }
-        this.doAppointment()
-    }
-
-    //  Create appointment based on infromation given by the user
-    async doAppointment() {
-        const today = format(new Date(), 'yyyy-MM-dd')
-        const username = this.state.username;
-        const date = this.state.date.toLocaleDateString("fr-CA");
-        const startTime = this.state.startTime.toLocaleTimeString("en-GB", {hour: '2-digit', minute: '2-digit', second: '2-digit'});
-        const endTime = this.state.endTime.toLocaleTimeString("en-GB", {hour: '2-digit', minute: '2-digit', second: '2-digit'});
-        const purpose = this.state.purpose;
-        const recurrenceType = this.state.recurrenceType;
-        const recurrenceOption = this.state.recurrenceOption;
-        const recurrenceInterval = this.state.recurrenceInterval;
-        const recurrenceWeek = this.state.recurrenceWeek;
-        const recurrenceDay = this.state.recurrenceDay;
-        const recurrenceTime = this.state.recurrenceTime;
-
-        var startTimeInt = this.timeToInt(startTime);
-        var endTimeInt = this.timeToInt(endTime);
-
-        //  If the date given by the user is before today or startime is after endtime, return error.
-        if (this.state.date < today || startTimeInt > endTimeInt){
-            alert('Invalid time.')
-            return;
-        }
-
-        this.setState({
-            buttonDisabled: true
-        })
-
-        //  Make duration into duration array with 30 minute increments to be saved in the database.
-        var durationArray = this.timesToDuration(startTimeInt, endTimeInt)
-        //  Duration in minutes
-        var duration = (durationArray.length - 1) * 30
-        try { 
-            let res = await fetch('/doAppointment', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/JSON',
-                    'Content-Type': 'application/json'
-                },
-                //  Send JSON to router to be inserted into database.
-                body: JSON.stringify({
-                    username: username,
-                    date: date,
-                    duration: duration,
-                    durationArray: durationArray,
-                    purpose: purpose,
-                    startTime: startTime,
-                    endTime: endTime,
-                    recurrenceType: recurrenceType,
-                    recurrenceOption: recurrenceOption,
-                    recurrenceInterval: recurrenceInterval,
-                    recurrenceWeek: recurrenceWeek,
-                    recurrenceDay: recurrenceDay,
-                    recurrenceTime: recurrenceTime,
-                    
-                })
-            });
-            //  Meeting is successfully made.
-            let result = await res.json();
-            if (result && result.success) {
-                alert(result.msg);
-            }
-            //  If time collides with other meetings, return fail.
-            else if (result && result.success === false) {
-                alert(result.msg);
-            }
-        }
-        //  Handle errors
-        catch(e) {
-            console.log(e);
-        }
-        this.getAppointment()
-    }
-
-    //  Loads appointments for front-end display that are under the current username
-    async getAppointment() {
-        const username = UserStore.username;
-        const today = format(new Date(), 'yyyy-MM-dd')
-
-        try{
-            let res = await fetch ('/getAppointment', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/JSON',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: username,
-                    today: today,
-                })
-            });
-
-            let result = await res.json();
-            //  Get appointments made by the user from the database, and set react state with retrieved data.
-            const appointments = result.appointments;
-            this.setState({appointments})
-        }
-        //  Handle errors
-        catch(e) {
-            UserStore.loading = false;
-            UserStore.isLoggedIn = false;
-        }
 
     };
 
-    //  When start button is pressed, open Zoom meeting start url retrieved from Zoom API.
-    startMeeting(start_url) {
-        window.open(start_url)
-    }
 
-    //  Delete meeting from the database and make DELETE request to Zoom API.
-    async deleteAppointment(meeting_id) {
-        const id = meeting_id
-        
-        //  Send meeting ID retrieved from Zoom API to router.
-        try { 
-            let res = await fetch('/deleteAppointment', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/JSON',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    id: id
-                })
-            });
-            
-            let result = await res.json();
-            //  If successful, alert with success message.
-            if (result && result.success) {
-                alert(result.msg);
-            }
-            //  If there is an error, alert with error message.
-            else if (result && result.success === false) {
-                alert(result.msg);
-            }
-        }
-        //  Handle errors.
-        catch(e) {
-            console.log(e);
-        }
-        this.getAppointment()
-    }
-
-
-
-    //  SENDING EMAILS
-    //  When share button is pressed, set shared meeting information as state to be displayed on front end & to be sent as e-mail.
-    onEmailShare(join_url, startTime, endTime, date, purpose){
-        const share_join_url = join_url;
-        const share_start_time = startTime;
-        const share_end_time = endTime;
-        const share_date = date;
-        const share_purpose = purpose;
-        this.setState({share_join_url, share_start_time, share_end_time, share_date, share_purpose})
-    }
-
-    //  When cancel button is pressed, clear shared meeting information from state. 
-    onCancel(){
-        this.setState({share_join_url: '', share_start_time: '', share_end_time: '', share_date: '', share_purpose: ''})
-    }
-
-    //  On submission,
-    sendEmail(e) {
-        e.preventDefault();
-
-        emailjs.sendForm('service_b2o90jd', 'template_95z7xck', e.target, 'user_vZliYk1PdzThlzI9zIDpR')
-            .then((result) => {
-                console.log(result.text);
-                alert('email was sent.')
-                
-            }, (error) => {
-                console.log(error.text);
-                alert('Error has occurred, please try again. Error:' + error)
-            });
-    }
 
     //RENDER METHOD
     render() {
@@ -353,13 +208,11 @@ class ZoomPicker extends Component {
                             <div className="explanation">
                                 <div className = "block_title">Appointments</div> <div className = "block_date">{today}</div>
                             </div>
+
                             <div className = "appointment_list_container">
-                                <AppointmentList
-                                    appointmentCards = {this.state.appointments}
-                                    onStart={this.startMeeting}
-                                    onDelete={this.deleteAppointment}
-                                    onEmailShare={this.onEmailShare}
-                                />
+                                    <AppointmentList
+                                        appointmentCards = {this.state.appointments}
+                                    />
                             </div>
                         </div>
                     </div>
@@ -369,6 +222,7 @@ class ZoomPicker extends Component {
                         <form className="appointment_form"
                         onSubmit={this.handleSubmit}>
 
+                            
                             {/* <DateChecker/> */}
                             <div className = "time-picker">
                                 <label>Starting Date</label>
@@ -460,6 +314,7 @@ class ZoomPicker extends Component {
                                         />
                                         {(recurrenceType==3) && <SelectMenu
                                             label='매 달 몇째주 / Week of the month'
+                                            endLabel='week'
                                             options={recurrenceWeeks}
                                             onChange={this.handleChange}
                                             name='recurrenceWeek'
@@ -483,7 +338,6 @@ class ZoomPicker extends Component {
                                         />
                                 </div>}
                             </div>
-
                             <button
                                 className="submit-button"
                             >
@@ -513,4 +367,4 @@ class ZoomPicker extends Component {
     }
 }
 
-export default ZoomPicker;
+export default FrontEndTest;

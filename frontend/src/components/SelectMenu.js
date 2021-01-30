@@ -9,12 +9,12 @@ class SelectMenu extends Component {
             <option key={r.value} {...r}>{r.name}</option>
         ));
         return (
-            <div className='SelectContainer'>
+            <div className='select-container'>
                 <label className='SelectLabel'>
                     {label}
                 </label>
                 <select 
-                    className='SelectOptions'
+                    className='select-options'
                     name={name}
                     onChange={onChange}
                     value={value}

@@ -8,11 +8,15 @@ class AppointmentCards extends Component {
             start_url, meeting_id, onStart, onDelete, onEmailShare, onKakaoTalk} = this.props;
         return (
             <div className="appointment-card">
-                <div className='meeting-info-container'>
-                    <h3 className="agenda">{purpose}: {date}</h3>
-                    <h3 className="duration">{startTime} - {endTime}</h3>
-                    <h3 className="zoom-username">{zoom_username}</h3>
-                    <h3 className="join-url">Invite Link: {join_url}</h3>
+                <div className='meeting-info'>
+                    <text className="purpose">{purpose} </text>
+                    <text className="date">{date}</text>
+                    <text className="duration">{startTime} - {endTime}</text>
+                </div>
+                <div className="zoom-info">
+                    <text className="zoom-username">{zoom_username}</text>
+                    <text>Invite link:</text>
+                    <text className="join-url">{join_url}</text>
                 </div>
                 <div className="button-container">
                     <button

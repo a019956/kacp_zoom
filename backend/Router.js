@@ -192,8 +192,7 @@ class Router {
                             "end_times": recurrenceTime
                         }
                     }
-
-
+                    
                     const email = z
                     //  Post request to zoom 
                     //  Use req-promise module's .then() method to make req calls.

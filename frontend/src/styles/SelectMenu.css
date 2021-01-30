@@ -1,13 +1,30 @@
-.SelectOptions {
+
+
+.select-container {
+    padding: 1px;
+}
+
+ul { 
+    list-style-type: disc; 
+    list-style-position: inside; 
+    padding: 10px;
+    margin: 0px;
+}
+
+.select-options {
     margin-top: 6px;
-    min-width: 18em;
-    height: 30px;
-    padding: 0px 10px;
-    font-size: 16px;
+    min-width: 12em;
+    height: 20px;
+    font-size: 15px;
     font-family: 'Raleway', sans-serif;
     background-color: #f3f3f3;
     border: 0;
     border-radius: 4px;
-    margin-bottom: 31px;
+    margin-bottom: 10px;
     transition: all 250ms ease-in-out;
+}
+
+.select-container {
+    display: flex;
+    flex-direction: column;
 }

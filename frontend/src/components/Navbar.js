@@ -11,13 +11,15 @@ class Navbar extends Component {
 		
 		return (
 			<header>
-				<h1>Welcome, {username}</h1>
+				<h1>Zoom Appointment Organizer</h1>
 				<nav>
-				<ul className = 'navItems'>
+				{/* <ul className = 'navItems'>
 					{navItems}
-				</ul>
+				</ul> */}
 				</nav>
-				<h2>Today is {today}</h2>
+				<button className = "settings-button">
+
+				</button>
 			</header>
 		);
 	}

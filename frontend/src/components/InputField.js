@@ -9,7 +9,7 @@ class Inputfield extends Component {
                         {this.props.label}
                     </label>
                     <input
-                    className='input'
+                    className='login-input-field'
                     type={this.props.type}
                     placeholder={this.props.placeholder}
              		name={this.props.name}

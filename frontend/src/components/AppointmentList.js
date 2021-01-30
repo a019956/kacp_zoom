@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import AppointmentCards from './AppointmentCards';
+import '../styles/AppointmentList.css'
 
 class AppointmentList extends Component {
 
@@ -8,20 +9,12 @@ class AppointmentList extends Component {
         const appointmentCards = this.props.appointmentCards.map((r, index) => (
             <AppointmentCards key = {r.id} {...r} onStart={onStart} onDelete={onDelete} onEmailShare={onEmailShare}/>
         ));
-        if (appointmentCards === [] ) {
+
         return (
-            <div className = 'empty-appointment-list'>
-                currently no appointments are made.
-            </div>
+                <div className = 'appointment-list'>
+                    {appointmentCards}
+                </div>
         )
-        }
-        else {
-            return (
-            <div className = 'appointment-list'>
-                {appointmentCards}
-            </div>
-            )
-        }
     }
 }
 

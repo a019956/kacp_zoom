@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
 }
-.input {
+.login-input-field {
     margin-top: 6px;
     min-width: 18em;
     height: 30px;
@@ -19,7 +19,6 @@
 }
 
 form {
-    margin-top: 2em;
     display: flex;
     flex-direction: column;
     align-items: center;
