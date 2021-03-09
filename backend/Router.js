@@ -6,7 +6,7 @@ const config = require('./config');
 const rp = require('request-promise');
 
 //  Required modules for password encryption.
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { Pool } = require('pg');
 const session       = require('express-session');
 const postgresArray = require('postgres-array')

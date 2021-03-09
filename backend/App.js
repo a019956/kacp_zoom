@@ -7,7 +7,8 @@ const db = require('./db')
 
 const express       = require('express');
 const app           = express();
-app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
+
+app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.json());
 
 app.use(session({
@@ -17,7 +18,7 @@ app.use(session({
 }));
 
 //  ENV variables
-const port = 3000;
+const port = process.env.port || 3000;
 //  Database
 const pool = new Pool({
 })
@@ -33,5 +34,5 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'))
 });
 app.listen(port, () => {
-    console.log(`server is up on port ${port}`);
+    console.log('server is up on port' + port);
 });
